@@ -1,0 +1,39 @@
+### GET request to example server
+GET http://localhost:8080/url/allUrls
+###
+
+### GET request to example server
+GET http://localhost:8080/url/allUrlNames
+
+###
+
+### GET request to example server
+GET http://localhost:8080/url/1
+
+###
+
+###
+POST http://localhost:8080/url
+Content-Type: application/json
+
+{
+  "urlid": 14,
+  "addedbyuserid": "1",
+  "urlname": "Url14",
+  "fullurl": "https://medium.com/@abhinavv.singh/building-restful-apis-with-spring-boot-a-step-by-step-tutorial-with-detailed-code-e7e3372ae756",
+  "urlhealth": "false"
+}
+
+###
+
+###
+POST http://localhost:8080/url
+Content-Type: application-json
+{
+
+}
+###
+
+
+
+
