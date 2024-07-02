@@ -14,8 +14,9 @@ public class Urls {
 
     @Id
     private long urlid;
-    private long userid;
+    private long addedbyuserid;
     private String urlname;
+    private String fullurl;
     private boolean urlhealth;
     private String dateadded;
     private String lastchecked;
