@@ -1,41 +1,54 @@
 package com.pavelDinit.dinitProject.Controllers;
 
-import com.pavelDinit.dinitProject.model.Urls;
-import com.pavelDinit.dinitProject.repo.UrlsRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pavelDinit.dinitProject.model.Url;
+import com.pavelDinit.dinitProject.service.UrlService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("url")
 public class UrlController {
 
 
-    private final UrlsRepo urlsRepo;
+    private final UrlService urlService;
 
-    public UrlController(UrlsRepo urlsRepo){
-        this.urlsRepo = urlsRepo;
+    public UrlController(UrlService urlService) {
+        this.urlService = urlService;
     }
 
+    // Requesting all the URL'S in a list:
+    @GetMapping
+    public List<Url> getAllUrls() {
+        return urlService.getAll();
+    }
 
+    // Requesting all the URL'S names:
+    @GetMapping("/names")
+    public List<String> getUrlNames() {
+        return urlService.getAllUrlNames();
+    }
+
+    // Requesting a single URL based on its ID:
+    @GetMapping("/{id}")
+    public Url getUrlById(@PathVariable Long id) {
+        return urlService.getUrlById(id);
+    }
+
+    // Requesting a deletion of a URL based on its ID:
+    @DeleteMapping("/{id}")
+    public String deleteUrlById(@PathVariable Long id) {
+        return urlService.deleteById(id);
+    }
+
+    // Requesting a deletion of a single URL based on the ID:
     @PostMapping
-    public String addUrl(@RequestBody Urls urls){
-        urlsRepo.save(urls);
-        return "Created URL: " + urls.getUrlname();
+    public String addUrl(@RequestBody Url url) {
+        return urlService.addUrl(url);
     }
 
-    @GetMapping("/allUrls")
-    public List<Urls> GetAll(){
-        List<Urls> all = urlsRepo.findAll();
-        return all;
-    }
 
-    @GetMapping("/allUrlNames")
-    public List<String> getAllUrlNames(){
-        List<Urls> all = urlsRepo.findAll();
-        return all.stream().map(Urls::getUrlname).collect(Collectors.toList());
-    }
+
+
 }
