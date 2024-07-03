@@ -1,7 +1,7 @@
 package com.pavelDinit.dinitProject.service;
 
 import com.pavelDinit.dinitProject.model.Url;
-import com.pavelDinit.dinitProject.repo.UrlsRepo;
+import com.pavelDinit.dinitProject.repo.UrlRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 @Service
 public class UrlService {
 
-    private final UrlsRepo urlRepo;
+    private final UrlRepo urlRepo;
 
 
-    public UrlService(UrlsRepo urlRepo) {
+    public UrlService(UrlRepo urlRepo) {
         this.urlRepo = urlRepo;
     }
 

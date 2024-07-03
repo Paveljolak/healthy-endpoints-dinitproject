@@ -4,14 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.springframework.stereotype.Service;
 
 
 @Data
 @Entity
 @Table(name = "urlstb")
 
-@Service
 public class Url {
     @Id
     private long urlid;

@@ -17,7 +17,6 @@ GET http://localhost:8080/url/names
 ###
 
 
-
 ### DELETE request to delete a single URL by its id:
 DELETE http://localhost:8080/url/5
 
@@ -29,11 +28,11 @@ POST http://localhost:8080/url
 Content-Type: application/json
 
 {
-  "urlid": 14,
+  "urlid": 5,
   "addedbyuserid": "1",
-  "urlname": "Url14",
+  "urlname": "Url5",
   "fullurl": "https://medium.com/@abhinavv.singh/building-restful-apis-with-spring-boot-a-step-by-step-tutorial-with-detailed-code-e7e3372ae756",
-  "urlhealth": "false"
+  "urlhealth": "true"
 }
 
 ###
