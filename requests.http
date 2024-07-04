@@ -5,9 +5,14 @@ GET http://localhost:8080/url
 
 ###
 
+### GET request to get all URLS:
+GET http://localhost:8080/url/neDela/Youtube
+
+###
+
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/url/5
+GET http://localhost:8080/url/4
 
 ###
 
@@ -18,7 +23,7 @@ GET http://localhost:8080/url/names
 
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/url/5
+DELETE http://localhost:8080/url/7
 
 ###
 
@@ -28,11 +33,24 @@ POST http://localhost:8080/url
 Content-Type: application/json
 
 {
-  "urlid": 5,
-  "addedbyuserid": "1",
-  "urlname": "Url5",
-  "fullurl": "https://medium.com/@abhinavv.singh/building-restful-apis-with-spring-boot-a-step-by-step-tutorial-with-detailed-code-e7e3372ae756",
-  "urlhealth": "true"
+  "addedByUserId": "1",
+  "urlName": "Youtube something else",
+  "fullUrl": "https://www.youtube.com/",
+  "urlHealth": "true"
+}
+
+
+###
+
+### POST request to write inside database, hardcoded.
+POST http://localhost:8080/url/postFromDPO
+Content-Type: application/json
+
+{
+  "addedByUserId": "1",
+  "urlName": "1",
+  "fullUrl": "https://www.baeldung.com/java-dto-pattern/",
+  "urlHealth": "false"
 }
 
 ###
