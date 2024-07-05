@@ -6,7 +6,9 @@ import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
 import com.pavelDinit.dinitProject.models.Url;
 import com.pavelDinit.dinitProject.repo.UrlRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +24,6 @@ public class UrlService {
         this.mapper = mapper;
     }
 
-
-
-
     // Function to get all the URLS in a list:
     public List<UrlReadingDto> getAllUrls() {
         List<Url> allUrls = urlRepo.findAll();
@@ -35,20 +34,12 @@ public class UrlService {
     }
 
 
-    // Function to get a single URL by its ID:
-    public Url getUrlById(Long id) {
-        return urlRepo.findById(id).orElseThrow(() -> new RuntimeException("There is no url with id " + id + "."));
-    }
-
-    // The next function [getUrlByName] would serve as a substitution for the above one: [getUrlById]
-    // Ask about this.
     // Function to get a single URL by its name:
-    public UrlReadingDto getUrlByName(String urlName){
-        Url url = urlRepo.findByUrlName(urlName)
-                .orElseThrow(() -> new RuntimeException("URL with name " + urlName + " not found."));
+    public UrlReadingDto getUrlById(Long urlId){
+        Url url = urlRepo.findByUrlId(urlId)
+                .orElseThrow(() -> new RuntimeException("URL with name " + urlId + " not found."));
         return mapper.readingToDto(url);
     }
-
 
     // Function to get all the names of the URLS that are inside the URL list:
     public List<Object> getAllUrlNames(){
@@ -56,31 +47,27 @@ public class UrlService {
         if(all.isEmpty()){
             throw new RuntimeException("There are no urls stored at the moment.");
         }
-        return all.stream().map(UrlReadingDto::getUrlName).collect(Collectors.toList());
+            return all.stream().map(UrlReadingDto::getUrlName).collect(Collectors.toList());
     }
 
     // Function to delete a single URL based on its ID:
-    public String deleteById(Long id){
-        if(urlRepo.existsById(id)){
-            urlRepo.deleteById(id);
-        }else{
-            throw new RuntimeException("There is no url with id " + id + ".");
+    public String deleteUrlById(Long urlId) {
+        if(!urlRepo.existsById(urlId)){
+            throw new RuntimeException("There is no url with id " + urlId + ".");
         }
-        return "Url with id " + id + " has been deleted";
+        urlRepo.deleteByUrlId(urlId);
+        return "Url with id " + urlId + " has been deleted";
     }
 
-    // Function to add a single URL inside the database:
-    public String addUrl(Url url){
-        urlRepo.save(url);
-        return "Created URL with id " + url.getUrlName();
-    }
-
-
-    public String createUrlFromDto(UrlCreationDto urlCreateDTO) {
+    // Function to add a single URL:
+    // This one will probably read some info that users would give
+    // And then write that one:
+    public String addUrl(UrlCreationDto urlCreateDTO) {
         Url url = mapper.creationToUrl(urlCreateDTO);
         urlRepo.save(url);
         return "Created URL with ID: " + url.getUrlId();
     }
+
 
 
 }

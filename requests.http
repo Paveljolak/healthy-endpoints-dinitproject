@@ -1,54 +1,32 @@
 
 
 ### GET request to get all URLS:
-GET http://localhost:8080/url
+GET http://localhost:8080/urls
 
 ###
-
-### GET request to get all URLS:
-GET http://localhost:8080/url/neDela/Youtube
-
-###
-
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/url/4
+GET http://localhost:8080/urls/18
 
 ###
 
 ### GET request to get all URL names:
-GET http://localhost:8080/url/names
+GET http://localhost:8080/urls/names
 
 ###
-
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/url/7
+DELETE http://localhost:8080/urls/18
 
 ###
 
-
-### POST request to write inside database, hardcoded.
-POST http://localhost:8080/url
+### POST request to write inside database, hardcoded:
+POST http://localhost:8080/urls
 Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "Youtube something else",
-  "fullUrl": "https://www.youtube.com/",
-  "urlHealth": "true"
-}
-
-
-###
-
-### POST request to write inside database, hardcoded.
-POST http://localhost:8080/url/postFromDPO
-Content-Type: application/json
-
-{
-  "addedByUserId": "1",
-  "urlName": "1",
+  "urlName": "UrlName",
   "fullUrl": "https://www.baeldung.com/java-dto-pattern/",
   "urlHealth": "false"
 }

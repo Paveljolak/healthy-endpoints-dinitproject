@@ -9,17 +9,18 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public UrlReadingDto readingToDto(Url url) {
+        Long urlId = url.getUrlId();
         Long addedByUserId = url.getAddedByUserId();
         String name = url.getUrlName();
         String fullUrl = url.getFullUrl();
         Boolean urlHealth = url.getUrlHealth();
         String lastChecked = url.getLastChecked();
 
-        return new UrlReadingDto(addedByUserId, name, fullUrl, urlHealth, lastChecked);
+        return new UrlReadingDto(urlId, addedByUserId, name, fullUrl, urlHealth, lastChecked);
     }
 
 
-    public Url toUrl(UrlReadingDto urlGetDTO){
+    public Url readingToUrl(UrlReadingDto urlGetDTO){
         Url url = new Url();
         url.setUrlName(urlGetDTO.getUrlName());
         url.setFullUrl(urlGetDTO.getFullUrl());

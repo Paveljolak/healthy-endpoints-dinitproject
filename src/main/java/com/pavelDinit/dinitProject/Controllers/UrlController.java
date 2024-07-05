@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @RestController
-@RequestMapping("url")
+@RequestMapping("urls")
 public class UrlController {
 
 
@@ -21,46 +21,32 @@ public class UrlController {
     }
 
     @GetMapping
-        public List<UrlReadingDto> getUrls(){
+        public List<UrlReadingDto> getAllUrls(){
         return urlService.getAllUrls();
     }
 
     // Requesting all the URL'S names:
+    // Only for quick testing, will delete later:
     @GetMapping("/names")
     public List<Object> getUrlNames() {
         return urlService.getAllUrlNames();
     }
 
-
     // Requesting a single URL based on its ID:
     @GetMapping("/{id}")
-    public Url getUrlById(@PathVariable Long id) {
+    public UrlReadingDto getUrlById(@PathVariable Long id) {
         return urlService.getUrlById(id);
     }
 
-    // Requesting a single URL based on its name
-    // This is because we don't have id in the dto, so we set it by name
-    @GetMapping("/neDela/{urlName}")
-    public UrlReadingDto getUrlByName(@PathVariable String urlName) {
-        UrlReadingDto urlReadDTO = urlService.getUrlByName(urlName);
-        return urlReadDTO;
-    }
-
-    // Requesting a deletion of a URL based on its ID:
+    // Requesting a deletion of a single URL based on the ID:
     @DeleteMapping("/{id}")
     public String deleteUrlById(@PathVariable Long id) {
-        return urlService.deleteById(id);
+        return urlService.deleteUrlById(id);
     }
 
-    // Requesting a deletion of a single URL based on the ID:
+    // Requesting creation of a new single URL based on the NAME:
     @PostMapping
-    public String addUrl(@RequestBody Url url) {
-        return urlService.addUrl(url);
-    }
-
-
-    @PostMapping("/postFromDPO")
-    public String createUrlFromDto(@RequestBody UrlCreationDto dto){
-        return urlService.createUrlFromDto(dto);
+    public String addUrl(@RequestBody UrlCreationDto createDto){
+        return urlService.addUrl(createDto);
     }
 }

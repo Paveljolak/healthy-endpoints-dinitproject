@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UrlReadingDto {
 
+    private Long urlId;
     private Long addedByUserId;
     private String urlName;
     private String fullUrl;
