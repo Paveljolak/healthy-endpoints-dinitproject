@@ -6,7 +6,13 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/18
+GET http://localhost:8080/urls/59
+
+
+###
+
+### GET request to read URLs health:
+GET http://localhost:8080/urls/60/health
 
 ###
 
@@ -16,7 +22,7 @@ GET http://localhost:8080/urls/names
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/18
+DELETE http://localhost:8080/urls/44
 
 ###
 
@@ -26,10 +32,16 @@ Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "UrlName",
-  "fullUrl": "https://www.baeldung.com/java-dto-pattern/",
-  "urlHealth": "false"
+  "urlName": "Git",
+  "fullUrl": "https://github.com/"
 }
+
+###
+
+
+### PATCH request to check and update all of the url healths
+PATCH http://localhost:8080/urls/checkHealthAll
+
 
 ###
 

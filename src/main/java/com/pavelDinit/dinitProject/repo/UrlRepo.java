@@ -14,5 +14,6 @@ public interface UrlRepo extends JpaRepository <Url, Long> {
 
     @Transactional
     void deleteByUrlId(Long urlId);
+
 }
 

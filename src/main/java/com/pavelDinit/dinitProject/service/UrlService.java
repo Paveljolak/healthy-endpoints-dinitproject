@@ -1,14 +1,13 @@
 package com.pavelDinit.dinitProject.service;
 
-import com.pavelDinit.dinitProject.components.Mapper;
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
 import com.pavelDinit.dinitProject.models.Url;
 import com.pavelDinit.dinitProject.repo.UrlRepo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +16,13 @@ import java.util.stream.Collectors;
 public class UrlService {
 
     private final UrlRepo urlRepo;
-    private final Mapper mapper;
+    private final RestTemplate restTemplate;
 
-    public UrlService(UrlRepo urlRepo, Mapper mapper) {
+    public UrlService(UrlRepo urlRepo, RestTemplate restTemplate) {
         this.urlRepo = urlRepo;
-        this.mapper = mapper;
+        this.restTemplate = restTemplate;
     }
+
 
     // Function to get all the URLS in a list:
     public List<UrlReadingDto> getAllUrls() {
@@ -30,7 +30,7 @@ public class UrlService {
         if (allUrls.isEmpty()) {
             throw new RuntimeException("There are no URLs stored at the moment.");
         }
-        return allUrls.stream().map(mapper::readingToDto).collect(Collectors.toList());
+        return allUrls.stream().map(UrlReadingDto::readingDtoFromUrl).collect(Collectors.toList());
     }
 
 
@@ -38,7 +38,7 @@ public class UrlService {
     public UrlReadingDto getUrlById(Long urlId){
         Url url = urlRepo.findByUrlId(urlId)
                 .orElseThrow(() -> new RuntimeException("URL with name " + urlId + " not found."));
-        return mapper.readingToDto(url);
+        return UrlReadingDto.readingDtoFromUrl(url);
     }
 
     // Function to get all the names of the URLS that are inside the URL list:
@@ -63,10 +63,54 @@ public class UrlService {
     // This one will probably read some info that users would give
     // And then write that one:
     public String addUrl(UrlCreationDto urlCreateDTO) {
-        Url url = mapper.creationToUrl(urlCreateDTO);
+        String urlHealthStr = urlCreateDTO.getFullUrl();
+        boolean urlHealth = false;
+        urlHealth = checkUrlHealth1(urlHealthStr);
+        Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth);
         urlRepo.save(url);
         return "Created URL with ID: " + url.getUrlId();
     }
+
+    // Function for checking if an url is healthy or not.
+    // Checks inside for Healthy status otherwise it will give us false.
+//    public boolean checkUrlHealth(String fullUrl) {
+//        try {
+//            ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
+//            if (response.getStatusCode().is2xxSuccessful()) {
+//                String responseBody = response.getBody();
+//                return responseBody != null && responseBody.contains("\"status\":\"Healthy\"");
+//            } else {
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    // Function that checks if we are receiving 200 from an url, if we are it will give 200
+    // This is for testing purposes, later we switch to checkUrlHealth function that is currently commented above.
+    public boolean checkUrlHealth1(String fullUrl) {
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
+//            return response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300; // deprecated
+                return response.getStatusCode().is2xxSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Function to check and update all the URLS healths, im not sure how to write this XD
+    public void checkAllUrlsHealth() {
+        List<Url> urls = urlRepo.findAll();
+        urls.forEach(url -> {
+            boolean isHealthy = checkUrlHealth1(url.getFullUrl());
+            url.setUrlHealth(isHealthy);
+            urlRepo.save(url);
+        });
+    }
+
 
 
 
