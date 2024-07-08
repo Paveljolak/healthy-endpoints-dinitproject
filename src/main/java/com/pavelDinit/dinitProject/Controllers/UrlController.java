@@ -2,6 +2,7 @@ package com.pavelDinit.dinitProject.Controllers;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
+import com.pavelDinit.dinitProject.exceptions.ApiBadRequestException;
 import com.pavelDinit.dinitProject.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,12 @@ public class UrlController {
     @DeleteMapping("/{id}")
     public String deleteUrlById(@PathVariable Long id) {
         return urlService.deleteUrlById(id);
+    }
+
+    // Requesting a deletion of a single URL based on the ID:
+    @DeleteMapping()
+    public String deleteAllUrls() {
+        return urlService.deleteAllUrls();
     }
 
     // Requesting creation of a new single URL based on the NAME:

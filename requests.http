@@ -6,7 +6,7 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/59
+GET http://localhost:8080/urls/200
 
 
 ###
@@ -22,7 +22,7 @@ GET http://localhost:8080/urls/names
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/44
+DELETE http://localhost:8080/urls/200
 
 ###
 
@@ -32,8 +32,8 @@ Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "Git",
-  "fullUrl": "https://github.com/"
+  "urlName": "Gitw",
+  "fullUrl": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
 }
 
 ###
@@ -46,3 +46,9 @@ PATCH http://localhost:8080/urls/checkHealthAll
 ###
 
 
+
+
+### GET request to get all URLS:
+DELETE http://localhost:8080/urls
+
+###

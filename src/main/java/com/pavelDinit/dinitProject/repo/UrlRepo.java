@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface UrlRepo extends JpaRepository <Url, Long> {
 
     Optional<Url> findByUrlId(Long urlID);
+    Optional<Url> findByFullUrl(String fullUrl);
 
     @Transactional
     void deleteByUrlId(Long urlId);
