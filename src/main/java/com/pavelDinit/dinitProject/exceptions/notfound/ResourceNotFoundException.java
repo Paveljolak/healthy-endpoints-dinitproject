@@ -1,4 +1,4 @@
-package com.pavelDinit.dinitProject.exceptions.old;
+package com.pavelDinit.dinitProject.exceptions.notfound;
 
 import com.pavelDinit.dinitProject.exceptions.ApiExceptionBase;
 import org.springframework.http.HttpStatus;

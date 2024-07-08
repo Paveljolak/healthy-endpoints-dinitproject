@@ -2,8 +2,8 @@ package com.pavelDinit.dinitProject.service;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.ConflictException;
-import com.pavelDinit.dinitProject.exceptions.ResourceNotFoundException;
+import com.pavelDinit.dinitProject.exceptions.conflict.ConflictException;
+import com.pavelDinit.dinitProject.exceptions.notfound.ResourceNotFoundException;
 import com.pavelDinit.dinitProject.models.Url;
 import com.pavelDinit.dinitProject.repo.UrlRepo;
 import org.springframework.http.ResponseEntity;

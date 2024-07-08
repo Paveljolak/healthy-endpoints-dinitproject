@@ -2,7 +2,6 @@ package com.pavelDinit.dinitProject.Controllers;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.ApiBadRequestException;
 import com.pavelDinit.dinitProject.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
