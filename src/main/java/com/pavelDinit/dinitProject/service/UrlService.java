@@ -5,9 +5,11 @@ import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
 import com.pavelDinit.dinitProject.models.Url;
 import com.pavelDinit.dinitProject.repo.UrlRepo;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,25 +96,37 @@ public class UrlService {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
 //            return response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300; // deprecated
+                 System.out.println("The healthy URL is:  " + fullUrl);
                 return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("The unhealthy URL is:  " + fullUrl);
             return false;
         }
     }
 
+
     // Function to check and update all the URLS healths, im not sure how to write this XD
-    public void checkAllUrlsHealth() {
+    public void checkAllUrlsHealth(){
         List<Url> urls = urlRepo.findAll();
         urls.forEach(url -> {
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
             url.setUrlHealth(isHealthy);
-            urlRepo.save(url);
+
         });
+        urlRepo.saveAll(urls);
+
     }
 
-
-
+    @Scheduled(fixedDelay = 30000)
+    public void checkAllUrlsHealthScheduler(){
+        try {
+            System.out.println(("Now is " + new Date()));
+            checkAllUrlsHealth();
+            System.out.println(("Now is " + new Date()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
 

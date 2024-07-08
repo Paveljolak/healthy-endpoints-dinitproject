@@ -68,7 +68,7 @@ public class UrlController {
     }
 
     @PatchMapping("/checkHealthAll")
-    public ResponseEntity<String> checkAllUrlsHealth() {
+    public ResponseEntity<String> checkAllUrlsHealth(){
         urlService.checkAllUrlsHealth();
         return ResponseEntity.ok("Health check initiated for all URLs.");
     }
