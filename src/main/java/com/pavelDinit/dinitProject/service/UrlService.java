@@ -117,12 +117,10 @@ public class UrlService {
 
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelayString = "PT5M")
     public void checkAllUrlsHealthScheduler(){
         try {
-            System.out.println(("Now is " + new Date()));
             checkAllUrlsHealth();
-            System.out.println(("Now is " + new Date()));
         }catch (Exception e){
             e.printStackTrace();
         }
