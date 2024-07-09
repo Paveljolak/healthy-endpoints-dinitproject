@@ -8,9 +8,9 @@ import java.time.ZonedDateTime;
 
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ApiBadRequestException extends ApiExceptionBase {
+public class ApiBadRequest extends ApiExceptionBase {
 
-    public ApiBadRequestException(String message) {
+    public ApiBadRequest(String message) {
         super(message, HttpStatus.BAD_REQUEST, ZonedDateTime.now());
     }
 }

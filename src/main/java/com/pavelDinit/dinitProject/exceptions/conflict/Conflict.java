@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.ZonedDateTime;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class ConflictException extends ApiExceptionBase {
+public class Conflict extends ApiExceptionBase {
 
-    public ConflictException(String message) {
+    public Conflict(String message) {
         super(message, HttpStatus.CONFLICT, ZonedDateTime.now());
     }
 }

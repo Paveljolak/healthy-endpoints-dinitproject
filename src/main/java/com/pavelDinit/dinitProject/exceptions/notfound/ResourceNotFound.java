@@ -8,9 +8,9 @@ import java.time.ZonedDateTime;
 
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends ApiExceptionBase {
+public class ResourceNotFound extends ApiExceptionBase {
 
-    public ResourceNotFoundException(String message) {
+    public ResourceNotFound(String message) {
         super(message, HttpStatus.NOT_FOUND, ZonedDateTime.now());
     }
 }
