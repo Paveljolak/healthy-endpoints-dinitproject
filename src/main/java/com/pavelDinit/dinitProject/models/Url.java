@@ -45,12 +45,5 @@ public class Url {
 
 
 
-    public static boolean checkUrlValidity(String fullUrl){
-            String fullUrlRegex = "^(http|https)://[-a-zA-Z0-9+&@#/%?=~_|,!:.;]*[-a-zA-Z0-9+@#/%=&_|]";
-            Pattern pattern = Pattern.compile(fullUrlRegex);
-            Matcher m = pattern.matcher(fullUrl);
 
-            System.out.println("Url is: " + m.matches());
-            return m.matches();
-    }
 }

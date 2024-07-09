@@ -9,8 +9,6 @@ import com.pavelDinit.dinitProject.repo.UrlRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.pavelDinit.dinitProject.models.Url.checkUrlValidity;
+import static com.pavelDinit.dinitProject.dtos.UrlReadingDto.checkUrlValidity;
 
 @Service
 public class UrlService {
@@ -87,7 +85,7 @@ public class UrlService {
         }
 
         // This needs function needs to be checked
-        // static funct in Url entity
+        // static funct in UrlReadingDto entity
         if (!checkUrlValidity(urlCreateDTO.getFullUrl())) {
             throw new ConflictException("Invalid URL format.");
         }
