@@ -1,3 +1,4 @@
+### REQUESTS
 
 
 ### GET request to get all URLS:
@@ -6,23 +7,22 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/65
-
-
-###
-
-### GET request to read URLs health:
-GET http://localhost:8080/urls/65/health
+GET http://localhost:8080/urls/81
 
 ###
 
-### GET request to get all URL names:
+### GET request to read URLs health: checked
+GET http://localhost:8080/urls/53/health
+
+###
+
+### GET request to get all URL names: checked
 GET http://localhost:8080/urls/names
 
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/65
+DELETE http://localhost:8080/urls/75
 
 ###
 
@@ -32,7 +32,7 @@ Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "YouTube1",
+  "urlName": "YouTube",
   "fullUrl": "https://www.youtube.com"
 }
 
@@ -48,19 +48,19 @@ PATCH http://localhost:8080/urls/checkHealthAll
 
 
 
-### GET request to get all URLS:
+### GET request to get all URLS: checked
 DELETE http://localhost:8080/urls
 
 ###
 
 
-### POST request to write inside database, hardcoded:
-PUT http://localhost:8080/urls/64
+### PUT request to update a single URL based on its ID:
+PUT http://localhost:8080/urls/81
 Content-Type: application/json
 
 {
-  "urlName": "YouTube1",
-  "fullUrl": "https://www.youtube.com/watch?v=aCOF_eWWpDw"
+  "urlName": "something",
+  "fullUrl": "https://github.com"
 }
 
 ###

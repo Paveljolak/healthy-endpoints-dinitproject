@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.ZonedDateTime;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ApiBadRequest extends ApiExceptionBase {
+public class TypeMissmatch extends ApiExceptionBase {
 
-    public ApiBadRequest(String message) {
+    public TypeMissmatch(String message) {
         super(message, HttpStatus.BAD_REQUEST, ZonedDateTime.now());
     }
 }
+
+
