@@ -6,7 +6,10 @@ import com.pavelDinit.dinitProject.exceptions.conflict.ConflictException;
 import com.pavelDinit.dinitProject.exceptions.notfound.ResourceNotFoundException;
 import com.pavelDinit.dinitProject.models.Url;
 import com.pavelDinit.dinitProject.repo.UrlRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,12 +20,15 @@ import java.util.stream.Collectors;
 
 import static com.pavelDinit.dinitProject.models.Url.checkUrlValidity;
 
-
 @Service
 public class UrlService {
 
     private final UrlRepo urlRepo;
     private final RestTemplate restTemplate;
+
+    Logger logger = LoggerFactory.getLogger(UrlService.class);
+
+
 
     public UrlService(UrlRepo urlRepo, RestTemplate restTemplate) {
         this.urlRepo = urlRepo;
@@ -123,10 +129,10 @@ public class UrlService {
     public boolean checkUrlHealth1(String fullUrl) {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
-                 System.out.println("The healthy URL is:  " + fullUrl);
-                return response.getStatusCode().is2xxSuccessful();
+            logger.info("The healthy URL is:  {}", fullUrl);
+            return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
-            System.out.println("The unhealthy URL is:  " + fullUrl);
+            logger.info("The unhealthy URL is:  {}", fullUrl);
             return false;
         }
     }
@@ -149,14 +155,6 @@ public class UrlService {
 
     }
 
-    @Scheduled(fixedDelayString = "PT5M")
-    public void checkAllUrlsHealthScheduler(){
-        try {
-            checkAllUrlsHealth();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 }
 
