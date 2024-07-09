@@ -6,13 +6,13 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/200
+GET http://localhost:8080/urls/65
 
 
 ###
 
 ### GET request to read URLs health:
-GET http://localhost:8080/urls/60/health
+GET http://localhost:8080/urls/65/health
 
 ###
 
@@ -22,7 +22,7 @@ GET http://localhost:8080/urls/names
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/200
+DELETE http://localhost:8080/urls/65
 
 ###
 
@@ -32,8 +32,8 @@ Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "Gitw",
-  "fullUrl": "httpdeveloper.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+  "urlName": "YouTube1",
+  "fullUrl": "https://www.youtube.com"
 }
 
 ###
@@ -50,5 +50,17 @@ PATCH http://localhost:8080/urls/checkHealthAll
 
 ### GET request to get all URLS:
 DELETE http://localhost:8080/urls
+
+###
+
+
+### POST request to write inside database, hardcoded:
+PUT http://localhost:8080/urls/64
+Content-Type: application/json
+
+{
+  "urlName": "YouTube1",
+  "fullUrl": "https://www.youtube.com/watch?v=aCOF_eWWpDw"
+}
 
 ###

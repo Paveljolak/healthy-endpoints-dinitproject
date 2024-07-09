@@ -1,9 +1,8 @@
-package com.pavelDinit.dinitProject.Controllers;
+package com.pavelDinit.dinitProject.controllers;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.service.UrlService;
-import org.slf4j.LoggerFactory;
+import com.pavelDinit.dinitProject.services.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +77,13 @@ public class UrlController {
     public ResponseEntity<String> checkAllUrlsHealth(){
         urlService.checkAllUrlsHealth();
         return ResponseEntity.ok("Health check initiated for all URLs.");
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> editUrl(@PathVariable Long id, @RequestBody UrlCreationDto createDto){
+        urlService.editUrl(id, createDto);
+        return ResponseEntity.noContent().build();
     }
 
 

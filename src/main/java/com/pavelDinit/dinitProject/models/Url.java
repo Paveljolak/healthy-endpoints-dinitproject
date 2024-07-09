@@ -2,11 +2,6 @@ package com.pavelDinit.dinitProject.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @Entity

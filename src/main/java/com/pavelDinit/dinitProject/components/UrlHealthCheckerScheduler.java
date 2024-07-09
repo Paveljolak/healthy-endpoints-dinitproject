@@ -1,10 +1,9 @@
 package com.pavelDinit.dinitProject.components;
 
-import com.pavelDinit.dinitProject.service.UrlService;
+import com.pavelDinit.dinitProject.services.UrlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

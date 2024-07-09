@@ -1,4 +1,4 @@
-package com.pavelDinit.dinitProject.service;
+package com.pavelDinit.dinitProject.services;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
@@ -15,8 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.pavelDinit.dinitProject.dtos.UrlReadingDto.checkUrlValidity;
 
 @Service
 public class UrlService {
@@ -80,18 +78,19 @@ public class UrlService {
     // And then write that one:
     public String addUrl(UrlCreationDto urlCreateDTO) {
 
+        // Check full urls:
         if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
             throw new Conflict("There is no URL specified.");
-        }
-
-        // This needs function needs to be checked
-        // static funct in UrlReadingDto entity
-        if (!checkUrlValidity(urlCreateDTO.getFullUrl())) {
+        } else if (!UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
             throw new Conflict("Invalid URL format.");
         }
 
+        // Check name:
+        if (urlCreateDTO.getUrlName() == null || urlCreateDTO.getUrlName().isEmpty()) {
+            throw new Conflict("There is no URL name specified.");
+        }
 
-        // Check if URL already exists
+        // Check if url exists:
         Optional<Url> existingUrl = urlRepo.findByFullUrl(urlCreateDTO.getFullUrl());
         if (existingUrl.isPresent()) {
             throw new Conflict("URL already exists.");
@@ -102,6 +101,7 @@ public class UrlService {
         boolean urlHealth = checkUrlHealth1(urlHealthStr);
         Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth);
         urlRepo.save(url);
+
         return "Created URL with ID: " + url.getUrlId();
     }
 
@@ -151,6 +151,45 @@ public class UrlService {
         });
         urlRepo.saveAll(urls);
 
+    }
+
+
+    public void editUrl(Long id, UrlCreationDto urlCreateDto) {
+        Optional<Url> optionalUrl = urlRepo.findById(id);
+
+        if (optionalUrl.isPresent()) {
+            Url url = optionalUrl.get();
+
+            // Checking the name:
+            if (urlCreateDto.getUrlName() != null && !urlCreateDto.getUrlName().isEmpty()) {
+                url.setUrlName(urlCreateDto.getUrlName());
+            } else {
+                throw new Conflict("URL name must be specified.");
+            }
+
+            // Checking the FullUrl:
+            if (urlCreateDto.getFullUrl() != null && !urlCreateDto.getFullUrl().isEmpty()) {
+
+                if (!urlCreateDto.getFullUrl().equals(url.getFullUrl())) {
+                    if (!UrlReadingDto.checkUrlValidity(urlCreateDto.getFullUrl())) {
+                        throw new Conflict("Invalid URL format.");
+                    }
+
+                    Optional<Url> existingUrl = urlRepo.findByFullUrl(urlCreateDto.getFullUrl());
+                    if (existingUrl.isPresent()) {
+                        throw new Conflict("URL already exists.");
+                    }
+                    url.setFullUrl(urlCreateDto.getFullUrl());
+                }
+            } else {
+                throw new Conflict("There is no URL specified.");
+            }
+
+            urlRepo.save(url);
+
+        } else {
+            throw new ResourceNotFound("There is no url with id " + id + ".");
+        }
     }
 
 
