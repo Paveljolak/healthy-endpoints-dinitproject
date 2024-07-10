@@ -1,6 +1,6 @@
-package com.pavelDinit.dinitProject.components;
+package com.pavel.dinit.project.components;
 
-import com.pavelDinit.dinitProject.services.UrlService;
+import com.pavel.dinit.project.services.UrlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

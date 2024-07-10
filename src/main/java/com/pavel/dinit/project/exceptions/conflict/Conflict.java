@@ -1,6 +1,6 @@
-package com.pavelDinit.dinitProject.exceptions.conflict;
+package com.pavel.dinit.project.exceptions.conflict;
 
-import com.pavelDinit.dinitProject.exceptions.ApiExceptionBase;
+import com.pavel.dinit.project.exceptions.ApiExceptionBase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

@@ -1,6 +1,6 @@
-package com.pavelDinit.dinitProject.exceptions.badrequest;
+package com.pavel.dinit.project.exceptions.badrequest;
 
-import com.pavelDinit.dinitProject.exceptions.ApiExceptionBase;
+import com.pavel.dinit.project.exceptions.ApiExceptionBase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

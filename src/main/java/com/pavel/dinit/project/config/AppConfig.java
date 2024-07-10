@@ -1,4 +1,4 @@
-package com.pavelDinit.dinitProject.config;
+package com.pavel.dinit.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,13 +1,9 @@
-package com.pavelDinit.dinitProject.controllers;
+package com.pavel.dinit.project.controllers;
 
-import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
-import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.badrequest.ApiBadRequest;
-import com.pavelDinit.dinitProject.exceptions.badrequest.TypeMissmatch;
-import com.pavelDinit.dinitProject.services.UrlService;
-import jakarta.validation.Valid;
-import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpStatus;
+import com.pavel.dinit.project.dtos.UrlCreationDto;
+import com.pavel.dinit.project.dtos.UrlReadingDto;
+import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
+import com.pavel.dinit.project.services.UrlService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +18,7 @@ import java.util.List;
 @RequestMapping("urls")
 public class UrlController {
 
-
+    private static final String INVALID_URLID = "Invalid URL ID: ";
     private final UrlService urlService;
 
     public UrlController(UrlService urlService) {
@@ -49,9 +45,9 @@ public class UrlController {
             UrlReadingDto urlReadingDto = urlService.getUrlById(urlId);
             return ResponseEntity.ok(urlReadingDto);
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + id);
+            throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
+            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
         }
     }
 
@@ -67,9 +63,9 @@ public class UrlController {
                 return ResponseEntity.status(503).body("URL is not healthy");
             }
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + id);
+            throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
+            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
         }
     }
 
@@ -80,9 +76,9 @@ public class UrlController {
             Long urlId = Long.parseLong(id);
             return urlService.deleteUrlById(urlId);
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + id);
+            throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
+            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
         }
     }
 
@@ -117,9 +113,9 @@ public class UrlController {
             urlService.editUrl(urlId, createDto);
             return ResponseEntity.noContent().build();
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + id);
+            throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
+            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
         }
 
     }

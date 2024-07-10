@@ -1,6 +1,6 @@
-package com.pavelDinit.dinitProject.dtos;
+package com.pavel.dinit.project.dtos;
 
-import com.pavelDinit.dinitProject.models.Url;
+import com.pavel.dinit.project.models.Url;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

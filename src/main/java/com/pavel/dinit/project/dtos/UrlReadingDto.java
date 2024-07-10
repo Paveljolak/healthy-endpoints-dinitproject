@@ -1,9 +1,10 @@
-package com.pavelDinit.dinitProject.dtos;
+package com.pavel.dinit.project.dtos;
 
+import com.pavel.dinit.project.models.Url;
 import lombok.*;
-import com.pavelDinit.dinitProject.models.Url;
 
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class UrlReadingDto {
+    private static final Logger logger = Logger.getLogger(UrlReadingDto.class.getName());
 
     private Long urlId;
     private Long addedByUserId;
@@ -46,13 +48,18 @@ public class UrlReadingDto {
         return url;
     }
 
-    public static boolean checkUrlValidity(String fullUrl){
+    public static boolean checkUrlValidity(String fullUrl) {
         String fullUrlRegex = "^(http|https)://[-a-zA-Z0-9+&@#/%?=~_|,!:.;]*[-a-zA-Z0-9+@#/%=&_|]";
         Pattern pattern = Pattern.compile(fullUrlRegex);
         Matcher m = pattern.matcher(fullUrl);
 
-        System.out.println("Url is: " + m.matches());
-        return m.matches();
-    }
+        boolean isValid = m.matches();
 
+        // Log only if the logging level is appropriate
+        if (logger.isLoggable(Level.INFO)) {
+            logger.info("URL validation result for {} is: {}");
+        }
+
+        return !isValid;
+    }
 }

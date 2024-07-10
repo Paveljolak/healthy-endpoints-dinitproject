@@ -1,12 +1,13 @@
-package com.pavelDinit.dinitProject.services;
+package com.pavel.dinit.project.services;
 
-import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
-import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.badrequest.TypeMissmatch;
-import com.pavelDinit.dinitProject.exceptions.conflict.Conflict;
-import com.pavelDinit.dinitProject.exceptions.notfound.ResourceNotFound;
-import com.pavelDinit.dinitProject.models.Url;
-import com.pavelDinit.dinitProject.repo.UrlRepo;
+import com.pavel.dinit.project.dtos.UrlCreationDto;
+import com.pavel.dinit.project.dtos.UrlReadingDto;
+import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
+import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.repo.UrlRepo;
+import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
+import com.pavel.dinit.project.exceptions.conflict.Conflict;
+import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UrlService {
+
+    private static final String NO_URLS_STORED_ATM = "There are no URLs stored at the moment.";
 
     private final UrlRepo urlRepo;
     private final RestTemplate restTemplate;
@@ -35,9 +38,10 @@ public class UrlService {
     public List<UrlReadingDto> getAllUrls() {
         List<Url> allUrls = urlRepo.findAll();
         if (allUrls.isEmpty()) {
-            throw new ResourceNotFound("There are no URLs stored at the moment.");
+            throw new ResourceNotFound(NO_URLS_STORED_ATM);
         }
-        return allUrls.stream().map(UrlReadingDto::readingDtoFromUrl).collect(Collectors.toList());
+        return allUrls.stream().map(UrlReadingDto::readingDtoFromUrl).toList();
+
     }
 
 
@@ -56,7 +60,7 @@ public class UrlService {
     public List<Object> getAllUrlNames() {
         List<UrlReadingDto> all = getAllUrls();
         if (all.isEmpty()) {
-            throw new ResourceNotFound("There are no urls stored at the moment.");
+            throw new ResourceNotFound(NO_URLS_STORED_ATM);
         }
         return all.stream().map(UrlReadingDto::getUrlName).collect(Collectors.toList());
     }
@@ -74,7 +78,7 @@ public class UrlService {
     public String deleteAllUrls() {
         List<Url> allUrls = urlRepo.findAll();
         if (allUrls.isEmpty()) {
-            throw new ResourceNotFound("There are no URLs stored at the moment.");
+            throw new ResourceNotFound(NO_URLS_STORED_ATM);
         }
         urlRepo.deleteAll();
         return "All URLs have been deleted.";
@@ -89,7 +93,7 @@ public class UrlService {
     // Check full urls:
         if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
             throw new Conflict("There is no URL specified.");
-        } else if (!UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
+        } else if (UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
             throw new Conflict("Invalid URL format.");
         } else if (urlCreateDTO.getUrlName() == null || urlCreateDTO.getUrlName().isEmpty()) {
             throw new Conflict("There is no URL name specified.");
@@ -114,20 +118,21 @@ public class UrlService {
 
 // Function for checking if an url is healthy or not.
 // Checks inside for Healthy status otherwise it will give us false.
-//    public boolean checkUrlHealth(String fullUrl) {
-//        try {
-//            ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
-//            if (response.getStatusCode().is2xxSuccessful()) {
-//                String responseBody = response.getBody();
-//                return responseBody != null && responseBody.contains("\"status\":\"Healthy\"");
-//            } else {
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
+    // We are not using this one for now, but SolarLint is annoying me, so I uncommented it
+    public boolean checkUrlHealth(String fullUrl) {
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                String responseBody = response.getBody();
+                return responseBody != null && responseBody.contains("\"status\":\"Healthy\"");
+            } else {
+                return false;
+            }
+        } catch (ApiBadRequest e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // Function that checks if we are receiving 200 from an url, if we are it will give 200
 // This is for testing purposes, later we switch to checkUrlHealth function that is currently commented above.
@@ -155,7 +160,7 @@ public class UrlService {
         List<Url> urls = urlRepo.findAll();
 
         if (urls.isEmpty()) {
-            throw new ResourceNotFound("There are no URLs stored at the moment.");
+            throw new ResourceNotFound(NO_URLS_STORED_ATM);
         }
 
         urls.forEach(url -> {
@@ -185,7 +190,7 @@ public class UrlService {
             if (urlCreateDto.getFullUrl() != null && !urlCreateDto.getFullUrl().isEmpty()) {
 
                 if (!urlCreateDto.getFullUrl().equals(url.getFullUrl())) {
-                    if (!UrlReadingDto.checkUrlValidity(urlCreateDto.getFullUrl())) {
+                    if (UrlReadingDto.checkUrlValidity(urlCreateDto.getFullUrl())) {
                         throw new Conflict("Invalid URL format.");
                     }
 

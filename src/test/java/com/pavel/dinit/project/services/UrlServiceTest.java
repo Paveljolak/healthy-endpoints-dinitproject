@@ -1,12 +1,12 @@
-package com.pavelDinit.dinitProject.services;
+package com.pavel.dinit.project.services;
 
-import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
-import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.badrequest.ApiBadRequest;
-import com.pavelDinit.dinitProject.exceptions.conflict.Conflict;
-import com.pavelDinit.dinitProject.exceptions.notfound.ResourceNotFound;
-import com.pavelDinit.dinitProject.models.Url;
-import com.pavelDinit.dinitProject.repo.UrlRepo;
+import com.pavel.dinit.project.dtos.UrlCreationDto;
+import com.pavel.dinit.project.dtos.UrlReadingDto;
+import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
+import com.pavel.dinit.project.exceptions.conflict.Conflict;
+import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
+import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.repo.UrlRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void getAllUrls_Successful() {
+    void getAllUrls_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
         Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
@@ -83,7 +83,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void getUrlById_Successful() {
+    void getUrlById_Successful() {
         // Arrange
         Long urlId1 = 1L;
         Long urlId2 = 2L;
@@ -124,7 +124,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void getUrlById_ThrowingResourceNotFound() {
+    void getUrlById_ThrowingResourceNotFound() {
         // Arrange
         Long urlId = 3L;
 
@@ -142,7 +142,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void getAllUrlNames_Successful() {
+    void getAllUrlNames_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
         Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-01-01", "2023-02-02");
@@ -163,23 +163,19 @@ class UrlServiceTest {
 
 
     @Test
-    public void getAllUrlNames_ThrowingResourceNotFound() {
+    void getAllUrlNames_ThrowingResourceNotFound() {
         // Arrange
-        // Mock empty list:
-        List<Url> listOfUrls = new ArrayList<>();
 
         // Act and Assert
         Assertions.assertThrows(ResourceNotFound.class, () -> urlService.getAllUrlNames());
     }
 
     @Test
-    public void deleteUrlById_Successful() {
+    void deleteUrlById_Successful() {
         // Arrange
         Long urlId1 = 1L;
         Long urlId2 = 2L;
 
-        Url url1 = new Url(urlId1, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(urlId2, 1L, "GitHub", "http://github.com", true, "2023-01-01", "2023-01-01");
 
         when(urlRepo.existsById(urlId1)).thenReturn(true);
         when(urlRepo.existsById(urlId2)).thenReturn(true);
@@ -198,7 +194,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void deleteUrlById_ThrowingResourceNotFound() {
+    void deleteUrlById_ThrowingResourceNotFound() {
         // Arrange
         long urlId = 1L;
         when(urlRepo.existsById(urlId)).thenReturn(false);
@@ -210,7 +206,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void deleteAllUrls_Successful() {
+    void deleteAllUrls_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
         Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
@@ -226,10 +222,9 @@ class UrlServiceTest {
 
 
     @Test
-    public void deleteAllUrls_ThrowingResourceNotFound() {
+    void deleteAllUrls_ThrowingResourceNotFound() {
         // Arrange
         // Empty list:
-        List<Url> listOfUrls = new ArrayList<>();
 
         // Act and Assert
         Assertions.assertThrows(ResourceNotFound.class, () -> urlService.deleteAllUrls());
@@ -237,7 +232,7 @@ class UrlServiceTest {
     }
 
     @Test
-    public void addUrl_Successful() {
+    void addUrl_Successful() {
         // Arrange
         UrlCreationDto urlCreateDto = new UrlCreationDto();
         urlCreateDto.setUrlName("YouTube");
@@ -262,7 +257,7 @@ class UrlServiceTest {
     }
 
     @Test
-    public void addUrl_ThrowingConflict() {
+    void addUrl_ThrowingConflict() {
         // Arrange
         UrlCreationDto urlCreateDto = new UrlCreationDto();
         urlCreateDto.setUrlName("YouTube");
@@ -279,11 +274,8 @@ class UrlServiceTest {
     }
 
     @Test
-    public void checkUrlHealth1_Successful() {
+    void checkUrlHealth1_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
-
         when(restTemplate.getForEntity("http://youtube.com", String.class))
                 .thenReturn((new ResponseEntity<>("Healthy", HttpStatus.OK)));
 
@@ -297,7 +289,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void checkUrlHealth1_ThrowingConflict() {
+    void checkUrlHealth1_ThrowingConflict() {
         // Arrange
         when(restTemplate.getForEntity("http://invalid-url.com", String.class)).thenThrow(new RuntimeException());
 
@@ -311,7 +303,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void checkUrlHealthById_Successful() {
+    void checkUrlHealthById_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
 
@@ -329,7 +321,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void checkUrlHealthById_ThrowingResourceNotFound() {
+    void checkUrlHealthById_ThrowingResourceNotFound() {
         // Arrange
         when(urlRepo.findByUrlId(1L)).thenReturn(Optional.empty());
 
@@ -340,7 +332,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void checkAllUrlsHealth_Successful() {
+    void checkAllUrlsHealth_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
         Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
@@ -367,7 +359,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void checkAllUrlsHealth_ThrowingResourceNotFound() {
+    void checkAllUrlsHealth_ThrowingResourceNotFound() {
         // Arrange
         List<Url> emptyList = new ArrayList<>();
         when(urlRepo.findAll()).thenReturn(emptyList);
@@ -378,7 +370,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void editUrl_Successful() {
+    void editUrl_Successful() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
 
@@ -400,7 +392,7 @@ class UrlServiceTest {
     }
 
     @Test
-    public void editUrl_ThrowingResourceNotFound() {
+    void editUrl_ThrowingResourceNotFound() {
         // Arrange
         UrlCreationDto urlCreateDto = new UrlCreationDto();
         urlCreateDto.setUrlName("YouTube Updated");
@@ -415,7 +407,7 @@ class UrlServiceTest {
 
 
     @Test
-    public void editUrl_ThrowingConflict() {
+    void editUrl_ThrowingConflict() {
         // Arrange
         Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
         Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
@@ -430,7 +422,6 @@ class UrlServiceTest {
         // Act and Assert
         assertThrows(Conflict.class, () -> urlService.editUrl(1L, urlCreateDto));
     }
-
 
 
 }

@@ -1,4 +1,4 @@
-package com.pavelDinit.dinitProject.models;
+package com.pavel.dinit.project.models;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,9 +1,8 @@
-package com.pavelDinit.dinitProject;
+package com.pavel.dinit.project;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootTest
 public class DinitProjectApplicationTests {

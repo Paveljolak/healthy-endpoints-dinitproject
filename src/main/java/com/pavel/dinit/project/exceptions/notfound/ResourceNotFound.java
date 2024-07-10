@@ -1,6 +1,6 @@
-package com.pavelDinit.dinitProject.exceptions.notfound;
+package com.pavel.dinit.project.exceptions.notfound;
 
-import com.pavelDinit.dinitProject.exceptions.ApiExceptionBase;
+import com.pavel.dinit.project.exceptions.ApiExceptionBase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
