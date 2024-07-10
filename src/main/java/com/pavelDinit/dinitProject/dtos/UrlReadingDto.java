@@ -1,11 +1,9 @@
 package com.pavelDinit.dinitProject.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import com.pavelDinit.dinitProject.models.Url;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +11,7 @@ import java.util.regex.Pattern;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class UrlReadingDto {
 
     private Long urlId;
@@ -55,4 +54,5 @@ public class UrlReadingDto {
         System.out.println("Url is: " + m.matches());
         return m.matches();
     }
+
 }

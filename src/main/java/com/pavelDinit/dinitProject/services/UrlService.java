@@ -2,7 +2,6 @@ package com.pavelDinit.dinitProject.services;
 
 import com.pavelDinit.dinitProject.dtos.UrlCreationDto;
 import com.pavelDinit.dinitProject.dtos.UrlReadingDto;
-import com.pavelDinit.dinitProject.exceptions.badrequest.ApiBadRequest;
 import com.pavelDinit.dinitProject.exceptions.badrequest.TypeMissmatch;
 import com.pavelDinit.dinitProject.exceptions.conflict.Conflict;
 import com.pavelDinit.dinitProject.exceptions.notfound.ResourceNotFound;
@@ -31,7 +30,6 @@ public class UrlService {
         this.urlRepo = urlRepo;
         this.restTemplate = restTemplate;
     }
-
 
     // Function to get all the URLS in a list:
     public List<UrlReadingDto> getAllUrls() {
