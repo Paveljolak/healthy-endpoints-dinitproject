@@ -4,10 +4,12 @@ import com.pavel.dinit.project.dtos.UrlCreationDto;
 import com.pavel.dinit.project.dtos.UrlReadingDto;
 import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.repo.UrlRepo;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
+import com.pavel.dinit.project.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +26,15 @@ public class UrlService {
     private static final String NO_URLS_STORED_ATM = "There are no URLs stored at the moment.";
 
     private final UrlRepo urlRepo;
+    private final UserRepo userRepo;
     private final RestTemplate restTemplate;
 
     Logger logger = LoggerFactory.getLogger(UrlService.class);
 
 
-    public UrlService(UrlRepo urlRepo, RestTemplate restTemplate) {
+    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate) {
         this.urlRepo = urlRepo;
+        this.userRepo = userRepo;
         this.restTemplate = restTemplate;
     }
 
@@ -102,6 +106,10 @@ public class UrlService {
             // This will later be used for authentication.
     }
 
+        // Check if user exists:
+        User user = userRepo.findById(urlCreateDTO.getAddedByUserId())
+                .orElseThrow(() -> new ResourceNotFound("User with ID " + urlCreateDTO.getAddedByUserId() + " not found."));
+
         // Check if url exists:
         Optional<Url> existingUrl = urlRepo.findByFullUrl(urlCreateDTO.getFullUrl());
         if (existingUrl.isPresent()) {
@@ -110,7 +118,7 @@ public class UrlService {
 
         String urlHealthStr = urlCreateDTO.getFullUrl();
         boolean urlHealth = checkUrlHealth1(urlHealthStr);
-        Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth);
+        Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth, user);
         urlRepo.save(url);
 
         return "Created URL with ID: " + url.getUrlId();

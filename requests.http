@@ -32,8 +32,8 @@ Content-Type: application/json
 
 {
   "addedByUserId": "1",
-  "urlName": "YouTube",
-  "fullUrl": "https://www.youtube.com"
+  "urlName": "GitHub",
+  "fullUrl": "https://www.github.com"
 }
 
 ###
@@ -64,3 +64,17 @@ Content-Type: application/json
 }
 
 ###
+
+
+### POST request for user registration
+POST http://localhost:8080/register/user
+Content-Type: application/json
+
+{
+  "id": "3",
+  "password": "user",
+  "role": "USER",
+  "username": "user"
+}
+###
+

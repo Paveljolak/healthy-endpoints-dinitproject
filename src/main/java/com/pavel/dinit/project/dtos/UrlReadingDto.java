@@ -1,6 +1,7 @@
 package com.pavel.dinit.project.dtos;
 
 import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.models.User;
 import lombok.*;
 
 import java.util.logging.Level;
@@ -27,20 +28,21 @@ public class UrlReadingDto {
     public static UrlReadingDto readingDtoFromUrl(Url url){
         return new UrlReadingDto(
                 url.getUrlId(),
-                url.getAddedByUserId(),
+                url.getAddedByUserId() != null ? url.getAddedByUserId().getId() : null,
                 url.getUrlName(),
                 url.getFullUrl(),
                 url.getUrlHealth(),
                 url.getLastChecked()
+
         );
     }
 
 
 
-    public static Url readingToUrlEnt(UrlReadingDto dto){
+    public static Url readingToUrlEnt(UrlReadingDto dto, User user){
         Url url = new Url();
         url.setUrlId(dto.getUrlId());
-        url.setAddedByUserId(dto.getAddedByUserId());
+        url.setAddedByUserId(user);
         url.setUrlName(dto.getUrlName());
         url.setFullUrl(dto.getFullUrl());
         url.setUrlHealth(dto.getUrlHealth());

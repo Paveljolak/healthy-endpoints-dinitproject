@@ -1,6 +1,7 @@
 package com.pavel.dinit.project.dtos;
 
 import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.models.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -28,9 +29,9 @@ public class UrlCreationDto {
     private Boolean urlHealth;
 
 
-    public static Url creationToUrlEnt(UrlCreationDto dto, boolean urlHealth){
+    public static Url creationToUrlEnt(UrlCreationDto dto, boolean urlHealth, User user){
         Url url = new Url();
-        url.setAddedByUserId(dto.getAddedByUserId());
+        url.setAddedByUserId(user);
         url.setUrlName(dto.getUrlName());
         url.setFullUrl(dto.getFullUrl());
         url.setUrlHealth(urlHealth);
@@ -40,7 +41,7 @@ public class UrlCreationDto {
 
     public static UrlCreationDto creationDtoFromUrl(Url url){
         return new UrlCreationDto(
-                url.getAddedByUserId(),
+                url.getAddedByUserId() != null ? url.getAddedByUserId().getId() : null,
                 url.getUrlName(),
                 url.getFullUrl(),
                 url.getUrlHealth()

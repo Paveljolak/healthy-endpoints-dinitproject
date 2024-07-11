@@ -6,7 +6,9 @@ import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
 import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.repo.UrlRepo;
+import com.pavel.dinit.project.repo.UserRepo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +34,9 @@ class UrlServiceTest {
     private UrlRepo urlRepo;
 
     @Mock
+    private UserRepo userRepo;
+
+    @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
@@ -41,17 +46,18 @@ class UrlServiceTest {
     @Test
     void getAllUrls_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
 
         List<Url> listOfUrls = List.of(url1, url2);
-
 
         when(urlRepo.findAll()).thenReturn(listOfUrls);
 
         UrlReadingDto urlReadDto1 = UrlReadingDto.readingDtoFromUrl(listOfUrls.get(0));
         UrlReadingDto urlReadDto2 = UrlReadingDto.readingDtoFromUrl(listOfUrls.get(1));
-
 
         // Act
         List<UrlReadingDto> allUrls = urlService.getAllUrls();
@@ -60,9 +66,7 @@ class UrlServiceTest {
         Assertions.assertEquals(2, listOfUrls.size());
         assertEquals(urlReadDto1, allUrls.get(0));
         assertEquals(urlReadDto2, allUrls.get(1));
-
     }
-
 
     @Test
     void getAllUrls_ThrowingResourceNotFound() {
@@ -87,13 +91,15 @@ class UrlServiceTest {
         // Arrange
         Long urlId1 = 1L;
         Long urlId2 = 2L;
-        Url url1 = new Url(urlId1, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(urlId2, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
 
         // Mock the behavior of urlService.getUrlById
         when(urlRepo.findByUrlId(urlId1)).thenReturn(Optional.of(url1));
         when(urlRepo.findByUrlId(urlId2)).thenReturn(Optional.of(url2));
-
 
         // Act
         UrlReadingDto urlReadDto1 = urlService.getUrlById(urlId1);
@@ -103,9 +109,9 @@ class UrlServiceTest {
         assertEquals(url1.getUrlId(), urlReadDto1.getUrlId());
         assertEquals(url2.getUrlId(), urlReadDto2.getUrlId());
 
-        assertEquals(url1.getAddedByUserId(), urlReadDto1.getAddedByUserId());
-        assertEquals(url2.getAddedByUserId(), urlReadDto2.getAddedByUserId());
-
+        // Compare the user IDs
+        assertEquals(url1.getAddedByUserId().getId(), urlReadDto1.getAddedByUserId());
+        assertEquals(url2.getAddedByUserId().getId(), urlReadDto2.getAddedByUserId());
 
         assertEquals(url1.getUrlName(), urlReadDto1.getUrlName());
         assertEquals(url2.getUrlName(), urlReadDto2.getUrlName());
@@ -116,11 +122,10 @@ class UrlServiceTest {
         assertEquals(url1.getUrlHealth(), urlReadDto1.getUrlHealth());
         assertEquals(url2.getUrlHealth(), urlReadDto2.getUrlHealth());
 
-
         assertEquals(url1.getLastChecked(), urlReadDto1.getLastChecked());
         assertEquals(url2.getLastChecked(), urlReadDto2.getLastChecked());
-
     }
+
 
 
     @Test
@@ -144,8 +149,11 @@ class UrlServiceTest {
     @Test
     void getAllUrlNames_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-01-01", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
 
         when(urlRepo.findAll()).thenReturn(List.of(url1, url2));
 
@@ -208,8 +216,11 @@ class UrlServiceTest {
     @Test
     void deleteAllUrls_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
         when(urlRepo.findAll()).thenReturn(Arrays.asList(url1, url2));
 
         // Act
@@ -239,7 +250,10 @@ class UrlServiceTest {
         urlCreateDto.setFullUrl("http://youtube.com");
         urlCreateDto.setAddedByUserId(1L);
 
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
 
+
+        when(userRepo.findById(1L)).thenReturn(Optional.of(user1)); // Mock userRepo to return user1
         when(urlRepo.findByFullUrl(urlCreateDto.getFullUrl())).thenReturn(Optional.empty());
         when(urlRepo.save(any(Url.class))).thenAnswer(invocation -> {
             Url url = invocation.getArgument(0);
@@ -252,9 +266,11 @@ class UrlServiceTest {
 
         // Assert
         assertEquals("Created URL with ID: 1", result);
+        verify(userRepo, times(1)).findById(1L); // Verify userRepo is called
         verify(urlRepo, times(1)).findByFullUrl(urlCreateDto.getFullUrl());
         verify(urlRepo, times(1)).save(any(Url.class));
     }
+
 
     @Test
     void addUrl_ThrowingConflict() {
@@ -264,14 +280,18 @@ class UrlServiceTest {
         urlCreateDto.setFullUrl("http://youtube.com");
         urlCreateDto.setAddedByUserId(1L);
 
-        when(urlRepo.findByFullUrl(urlCreateDto.getFullUrl())).thenReturn(Optional.of(new Url()));
+        User user1 = new User(1L, "john.doe", "password", "USER", null);
 
+        when(userRepo.findById(1L)).thenReturn(Optional.of(user1)); // Mock userRepo to return user1
+        when(urlRepo.findByFullUrl(urlCreateDto.getFullUrl())).thenReturn(Optional.of(new Url()));
 
         // Act and Assert
         Assertions.assertThrows(Conflict.class, () -> urlService.addUrl(urlCreateDto));
+        verify(userRepo, times(1)).findById(1L); // Verify userRepo is called
         verify(urlRepo, times(1)).findByFullUrl(urlCreateDto.getFullUrl());
         verify(urlRepo, never()).save(any(Url.class));
     }
+
 
     @Test
     void checkUrlHealth1_Successful() {
@@ -305,7 +325,9 @@ class UrlServiceTest {
     @Test
     void checkUrlHealthById_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
 
         when(urlRepo.findByUrlId(1L)).thenReturn(Optional.of(url1));
         when(restTemplate.getForEntity("http://youtube.com", String.class))
@@ -334,9 +356,12 @@ class UrlServiceTest {
     @Test
     void checkAllUrlsHealth_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
-        Url url3 = new Url(2L, 1L, "Invalid Website", "http://invalid-url.com", true, "2023-02-02", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
+        Url url3 = new Url(2L, "Invalid Website", "http://invalid-url.com", true, "2023-02-02", "2023-02-02", user2);
         List<Url> urls = List.of(url1, url2, url3);
 
         when(urlRepo.findAll()).thenReturn(urls);
@@ -372,7 +397,10 @@ class UrlServiceTest {
     @Test
     void editUrl_Successful() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
+
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
 
         UrlCreationDto urlCreateDto = new UrlCreationDto();
         urlCreateDto.setUrlName("YouTube Updated");
@@ -409,8 +437,13 @@ class UrlServiceTest {
     @Test
     void editUrl_ThrowingConflict() {
         // Arrange
-        Url url1 = new Url(1L, 1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01");
-        Url url2 = new Url(2L, 1L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02");
+        User user1 = new User(1L, "Pavel", "password", "USER", null);
+        User user2 = new User(2L, "NotPavel", "password", "ADMIN,USER", null);
+
+        Url url1 = new Url(1L, "YouTube", "http://youtube.com", true, "2023-01-01", "2023-01-01", user1);
+        Url url2 = new Url(2L, "GitHub", "http://github.com", true, "2023-02-02", "2023-02-02", user2);
+
+
 
         UrlCreationDto urlCreateDto = new UrlCreationDto();
         urlCreateDto.setUrlName("YouTube Updated");

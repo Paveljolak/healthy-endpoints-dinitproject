@@ -6,6 +6,7 @@ target/
 
 src/main/resources/application-local.properties
 dinitAppLog.log
+appLog.log
 .env
 
 ### STS ###
