@@ -8,6 +8,7 @@ src/main/resources/application-local.properties
 dinitAppLog.log
 appLog.log
 .env
+appLog*
 
 ### STS ###
 .apt_generated
