@@ -4,6 +4,7 @@ import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
+import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.repo.UrlRepo;
 import com.pavel.dinit.project.repo.UserRepo;
@@ -20,9 +21,11 @@ public class UserService {
 
     private final UserRepo userRepo;
 
+    private final AccessControlService accessControlService;
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, AccessControlService accessControlService) {
         this.userRepo = userRepo;
+        this.accessControlService = accessControlService;
     }
 
 
@@ -47,13 +50,20 @@ public class UserService {
 
 
     // Function to delete a single URL based on its ID:
-    public String deleteUserById(Long userId) {
+    public String deleteUserById(Long userId, String username) {
+
+        if (!accessControlService.canDeleteUser(userId, username)) {
+            throw new UnauthorizedException("Unauthorized.");
+        }
+
         if (!userRepo.existsById(Math.toIntExact(userId))) {
             throw new ResourceNotFound("There is no user with id " + userId + ".");
         }
         userRepo.deleteById(userId);
         return "User with id " + userId + " has been deleted";
     }
+
+
 
 
     // Function to create a single USER:

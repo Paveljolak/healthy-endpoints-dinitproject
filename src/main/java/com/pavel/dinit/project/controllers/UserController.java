@@ -6,6 +6,9 @@ import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -48,8 +51,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public String deleteUserById(@PathVariable String id) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+
             Long userId = Long.parseLong(id);
-            return userService.deleteUserById(userId);
+            return userService.deleteUserById(userId, username);
         } catch (NumberFormatException ex) {
             throw new TypeMissmatch(INVALID_USERID + id);
         } catch (MethodArgumentTypeMismatchException ex) {

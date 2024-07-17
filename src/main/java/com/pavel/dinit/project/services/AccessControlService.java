@@ -45,7 +45,7 @@ public class AccessControlService {
 
 
     // The code is duplicated for now, since we have one for updating one for deleting:
-    // So we can easily change which users we want to let to have permissions:
+    // So we can easily change which users we want to let to have permissions.
     public boolean canDelete(Long urlId, String username) {
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
@@ -60,4 +60,14 @@ public class AccessControlService {
         // Check if user is admin or if the user owns the URL
         return isAdmin(username) || user.getId().equals(url.getAddedByUserId().getId());
     }
+
+
+    public boolean canDeleteUser(Long userId, String requestingUsername) {
+        User userToDelete = userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found."));
+
+        // Check if user is admin or if the user owns the account
+        return isAdmin(requestingUsername) || requestingUsername.equals(userToDelete.getUsername());
+    }
+
 }
