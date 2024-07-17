@@ -76,8 +76,11 @@ public class UrlController {
     @DeleteMapping("/{id}")
     public String deleteUrlById(@PathVariable String id) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+
             Long urlId = Long.parseLong(id);
-            return urlService.deleteUrlById(urlId);
+            return urlService.deleteUrlById(urlId, username);
         } catch (NumberFormatException ex) {
             throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
@@ -88,7 +91,10 @@ public class UrlController {
     // Requesting a deletion of a single URL based on the ID:
     @DeleteMapping
     public String deleteAllUrls() {
-        return urlService.deleteAllUrls();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+        return urlService.deleteAllUrls(username);
     }
 
     // Requesting creation of a new single URL based on the NAME:
@@ -115,8 +121,10 @@ public class UrlController {
 
         try {
             Long urlId = Long.parseLong(id);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
 
-            urlService.editUrl(urlId, createDto);
+            urlService.editUrl(urlId, createDto, username);
             return ResponseEntity.noContent().build();
         } catch (NumberFormatException ex) {
             throw new TypeMissmatch(INVALID_URLID + id);

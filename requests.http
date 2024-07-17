@@ -7,8 +7,8 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/1
-Authorization: Basic {{name}} {{password}}
+GET http://localhost:8080/urls/10
+Authorization: Basic {{usernameUser6}} {{passwordUser6}}
 
 ###
 
@@ -21,23 +21,24 @@ GET http://localhost:8080/urls/1/health
 
 ### GET request to get all URL names: checked
 GET http://localhost:8080/urls/names
-Authorization: Basic {{name}} {{password}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/75
+DELETE http://localhost:8080/urls/13
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
 ### POST request to write inside database, hardcoded:
 POST http://localhost:8080/urls
 Content-Type: application/json
-Authorization: Basic {{usernameUser1}} {{passwordUser1}}
+Authorization: Basic {{usernameUser2}} {{passwordUser2}}
 
 {
-  "urlName": "YoutubeForDate",
-  "fullUrl": "https://www.youtube3.com"
+  "urlName": "From User 1",
+  "fullUrl": "http://github.com/Paveljolak2"
 }
 
 ###
@@ -54,17 +55,19 @@ PATCH http://localhost:8080/urls/checkHealthAll
 
 ### GET request to get all URLS: checked
 DELETE http://localhost:8080/urls
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
 
 ### PUT request to update a single URL based on its ID:
-PUT http://localhost:8080/urls/81
+PUT http://localhost:8080/urls/9
 Content-Type: application/json
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "urlName": "something",
-  "fullUrl": "https://github.com"
+  "urlName": "This is from admin 1",
+  "fullUrl": "https://www.youtube.com"
 }
 
 ###
@@ -81,6 +84,8 @@ Content-Type: application/json
   "username": "user"
 }
 ###
+
+
 
 
 

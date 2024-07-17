@@ -2,6 +2,7 @@ package com.pavel.dinit.project.services;
 
 import com.pavel.dinit.project.dtos.UrlCreationDto;
 import com.pavel.dinit.project.dtos.UrlReadingDto;
+import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.models.Url;
 import com.pavel.dinit.project.models.User;
@@ -31,14 +32,16 @@ public class UrlService {
     private final UrlRepo urlRepo;
     private final UserRepo userRepo;
     private final RestTemplate restTemplate;
+    private final AccessControlService accessControlService;
 
     Logger logger = LoggerFactory.getLogger(UrlService.class);
 
 
-    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate) {
+    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate, AccessControlService accessControlService) {
         this.urlRepo = urlRepo;
         this.userRepo = userRepo;
         this.restTemplate = restTemplate;
+        this.accessControlService = accessControlService;
     }
 
     // Function to get all the URLS in a list:
@@ -73,7 +76,12 @@ public class UrlService {
     }
 
     // Function to delete a single URL based on its ID:
-    public String deleteUrlById(Long urlId) {
+    public String deleteUrlById(Long urlId, String username) {
+
+        if (!accessControlService.canDelete(urlId, username)) {
+            throw new SecurityException("You are not authorized to edit this URL.");
+        }
+
         if (!urlRepo.existsById(urlId)) {
             throw new ResourceNotFound("There is no url with id " + urlId + ".");
         }
@@ -82,7 +90,11 @@ public class UrlService {
     }
 
     // Function to delete all URLs:
-    public String deleteAllUrls() {
+    public String deleteAllUrls(String username) {
+        if (!accessControlService.isAdmin(username)) {
+            throw new UnauthorizedException("Only admins can delete all URLs.");
+        }
+
         List<Url> allUrls = urlRepo.findAll();
         if (allUrls.isEmpty()) {
             throw new ResourceNotFound(NO_URLS_STORED_ATM);
@@ -196,9 +208,13 @@ public class UrlService {
     }
 
 
-    public void editUrl(Long id, UrlCreationDto urlCreateDto) {
-        Optional<Url> optionalUrl = urlRepo.findById(id);
+    public void editUrl(Long id, UrlCreationDto urlCreateDto, String username) {
 
+        if (!accessControlService.canEdit(id, username)) {
+            throw new SecurityException("You are not authorized to edit this URL.");
+        }
+
+        Optional<Url> optionalUrl = urlRepo.findById(id);
         if (optionalUrl.isPresent()) {
             Url url = optionalUrl.get();
 

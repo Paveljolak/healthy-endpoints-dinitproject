@@ -4,14 +4,15 @@
 
 ### GET request to get all URLS:
 GET http://localhost:8080/users
-Authorization: Basic {{name}} {{password}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
 
 
 ### GET request to get a single User based on its ID:
-GET http://localhost:8080/users/2
+GET http://localhost:8080/users/1
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
