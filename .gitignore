@@ -5,10 +5,13 @@ target/
 !**/src/test/**/target/
 
 src/main/resources/application-local.properties
-dinitAppLog.log
+dinitAppLog.log*
 appLog.log
 .env
-appLog*
+dinitAppLog.log.2024-07-09.0.gz
+http-client.env.json
+
+
 
 ### STS ###
 .apt_generated

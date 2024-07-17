@@ -4,6 +4,7 @@
 
 ### GET request to get all URLS:
 GET http://localhost:8080/users
+Authorization: Basic {{name}} {{password}}
 
 ###
 

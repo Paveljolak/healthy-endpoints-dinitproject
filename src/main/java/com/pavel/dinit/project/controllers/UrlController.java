@@ -5,6 +5,9 @@ import com.pavel.dinit.project.dtos.UrlReadingDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.services.UrlService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -91,7 +94,10 @@ public class UrlController {
     // Requesting creation of a new single URL based on the NAME:
     @PostMapping
     public String addUrl(@RequestBody UrlCreationDto createDto) {
-        return urlService.addUrl(createDto);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        return urlService.addUrl(createDto, username);
     }
 
     // Request to check the health of all URLs inside the DB:

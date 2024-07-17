@@ -12,10 +12,13 @@ import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
 import com.pavel.dinit.project.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,39 +95,49 @@ public class UrlService {
     // Function to add a single URL:
     // This one will probably read some info that users would give
     // And then write that one:
-    public String addUrl(UrlCreationDto urlCreateDTO) {
+    @Transactional
+    public String addUrl(UrlCreationDto urlCreateDTO, String username) {
+        validateUrlCreationDto(urlCreateDTO);
 
-    // Check full urls:
-        if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
-            throw new Conflict("There is no URL specified.");
-        } else if (UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
-            throw new Conflict("Invalid URL format.");
-        } else if (urlCreateDTO.getUrlName() == null || urlCreateDTO.getUrlName().isEmpty()) {
-            throw new Conflict("There is no URL name specified.");
-        } else if (urlCreateDTO.getAddedByUserId() == null) {
-            throw new Conflict("There is no User Id specified.");
-            // This will later be used for authentication.
-    }
+        User user = getUserByUsername(username);
 
-        // Check if user exists:
-        User user = userRepo.findById(urlCreateDTO.getAddedByUserId())
-                .orElseThrow(() -> new ResourceNotFound("User with ID " + urlCreateDTO.getAddedByUserId() + " not found."));
+        checkIfUrlExists(urlCreateDTO.getFullUrl());
 
-        // Check if url exists:
-        Optional<Url> existingUrl = urlRepo.findByFullUrl(urlCreateDTO.getFullUrl());
-        if (existingUrl.isPresent()) {
-            throw new Conflict("URL already exists.");
-        }
+        boolean urlHealth = checkUrlHealth(urlCreateDTO.getFullUrl());
 
-        String urlHealthStr = urlCreateDTO.getFullUrl();
-        boolean urlHealth = checkUrlHealth1(urlHealthStr);
         Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth, user);
+        url.setDateAdded(String.valueOf(LocalDateTime.now())); // Set current timestamp using LocalDateTime
+
         urlRepo.save(url);
 
         return "Created URL with ID: " + url.getUrlId();
     }
 
-// Function for checking if an url is healthy or not.
+    private void validateUrlCreationDto(UrlCreationDto urlCreateDTO) {
+        if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
+            throw new Conflict("There is no URL specified.");
+        }
+        if (UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
+            throw new Conflict("Invalid URL format.");
+        }
+        if (urlCreateDTO.getUrlName() == null || urlCreateDTO.getUrlName().isEmpty()) {
+            throw new Conflict("There is no URL name specified.");
+        }
+    }
+
+    private User getUserByUsername(String username) {
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
+    }
+
+    private void checkIfUrlExists(String fullUrl) {
+        Optional<Url> existingUrl = urlRepo.findByFullUrl(fullUrl);
+        if (existingUrl.isPresent()) {
+            throw new Conflict("URL already exists.");
+        }
+    }
+
+    // Function for checking if an url is healthy or not.
 // Checks inside for Healthy status otherwise it will give us false.
     // We are not using this one for now, but SolarLint is annoying me, so I uncommented it
     public boolean checkUrlHealth(String fullUrl) {
@@ -164,6 +177,7 @@ public class UrlService {
 
 
     // Function to check and update all the URLS healths, im not sure how to write this XD
+    @Transactional
     public void checkAllUrlsHealth() {
         List<Url> urls = urlRepo.findAll();
 
@@ -174,6 +188,7 @@ public class UrlService {
         urls.forEach(url -> {
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
             url.setUrlHealth(isHealthy);
+            url.setLastChecked(LocalDateTime.now().toString());
 
         });
         urlRepo.saveAll(urls);

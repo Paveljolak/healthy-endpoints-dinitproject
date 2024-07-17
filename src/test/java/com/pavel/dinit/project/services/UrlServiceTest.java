@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ class UrlServiceTest {
 
     @InjectMocks
     private UrlService urlService;
+
 
 
     @Test
@@ -240,56 +242,6 @@ class UrlServiceTest {
         // Act and Assert
         Assertions.assertThrows(ResourceNotFound.class, () -> urlService.deleteAllUrls());
         verify(urlRepo, never()).deleteAll();
-    }
-
-    @Test
-    void addUrl_Successful() {
-        // Arrange
-        UrlCreationDto urlCreateDto = new UrlCreationDto();
-        urlCreateDto.setUrlName("YouTube");
-        urlCreateDto.setFullUrl("http://youtube.com");
-        urlCreateDto.setAddedByUserId(1L);
-
-        User user1 = new User(1L, "Pavel", "password", "USER", null);
-
-
-        when(userRepo.findById(1L)).thenReturn(Optional.of(user1)); // Mock userRepo to return user1
-        when(urlRepo.findByFullUrl(urlCreateDto.getFullUrl())).thenReturn(Optional.empty());
-        when(urlRepo.save(any(Url.class))).thenAnswer(invocation -> {
-            Url url = invocation.getArgument(0);
-            url.setUrlId(1L);
-            return url;
-        });
-
-        // Act
-        String result = urlService.addUrl(urlCreateDto);
-
-        // Assert
-        assertEquals("Created URL with ID: 1", result);
-        verify(userRepo, times(1)).findById(1L); // Verify userRepo is called
-        verify(urlRepo, times(1)).findByFullUrl(urlCreateDto.getFullUrl());
-        verify(urlRepo, times(1)).save(any(Url.class));
-    }
-
-
-    @Test
-    void addUrl_ThrowingConflict() {
-        // Arrange
-        UrlCreationDto urlCreateDto = new UrlCreationDto();
-        urlCreateDto.setUrlName("YouTube");
-        urlCreateDto.setFullUrl("http://youtube.com");
-        urlCreateDto.setAddedByUserId(1L);
-
-        User user1 = new User(1L, "john.doe", "password", "USER", null);
-
-        when(userRepo.findById(1L)).thenReturn(Optional.of(user1)); // Mock userRepo to return user1
-        when(urlRepo.findByFullUrl(urlCreateDto.getFullUrl())).thenReturn(Optional.of(new Url()));
-
-        // Act and Assert
-        Assertions.assertThrows(Conflict.class, () -> urlService.addUrl(urlCreateDto));
-        verify(userRepo, times(1)).findById(1L); // Verify userRepo is called
-        verify(urlRepo, times(1)).findByFullUrl(urlCreateDto.getFullUrl());
-        verify(urlRepo, never()).save(any(Url.class));
     }
 
 

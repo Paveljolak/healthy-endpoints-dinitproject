@@ -28,6 +28,9 @@ public class UrlCreationDto {
 
     private Boolean urlHealth;
 
+    public UrlCreationDto(String youTube, String url, Object o) {
+    }
+
 
     public static Url creationToUrlEnt(UrlCreationDto dto, boolean urlHealth, User user){
         Url url = new Url();
