@@ -10,7 +10,7 @@ appLog.log
 .env
 dinitAppLog.log.2024-07-09.0.gz
 http-client.env.json
-
+appLog*
 
 
 ### STS ###
