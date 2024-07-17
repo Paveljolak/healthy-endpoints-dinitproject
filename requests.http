@@ -15,12 +15,13 @@ Authorization: Basic {{name}} {{password}}
 
 ### GET request to read URLs health: checked
 GET http://localhost:8080/urls/1/health
-Authorization: Basic {{name}} {{password}}
+
 
 ###
 
 ### GET request to get all URL names: checked
 GET http://localhost:8080/urls/names
+Authorization: Basic {{name}} {{password}}
 
 ###
 
