@@ -1,4 +1,4 @@
-### REQUESTS
+### REQUESTS FOR URLS
 
 
 ### GET request to get all URLS:
@@ -7,12 +7,15 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/200
+GET http://localhost:8080/urls/1
+Authorization: Basic {{name}} {{password}}
 
 ###
 
+
 ### GET request to read URLs health: checked
-GET http://localhost:8080/urls/53/health
+GET http://localhost:8080/urls/1/health
+Authorization: Basic {{name}} {{password}}
 
 ###
 
@@ -77,4 +80,6 @@ Content-Type: application/json
   "username": "user"
 }
 ###
+
+
 

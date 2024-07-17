@@ -1,0 +1,40 @@
+### REQUESTS FOR USERS
+
+
+
+### GET request to get all URLS:
+GET http://localhost:8080/users
+
+###
+
+
+
+### GET request to get a single User based on its ID:
+GET http://localhost:8080/users/2
+
+###
+
+
+
+
+### DELETE request to delete a single User based on its ID:
+DELETE http://localhost:8080/users/3
+
+###
+
+
+
+### POST request to add a single User:
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "userAdmin",
+  "password": "userAdmin",
+  "role": "ADMIN,USER"
+}
+###
+
+
+
+
