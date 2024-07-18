@@ -6,26 +6,34 @@ import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.models.User;
-import com.pavel.dinit.project.repo.UrlRepo;
 import com.pavel.dinit.project.repo.UserRepo;
-import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @Service
 public class UserService {
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private static final String NO_USERS_STORED_ATM = "There are no USERS stored at the moment.";
 
     private final UserRepo userRepo;
 
+    private final AlertService alertService;
+
     private final AccessControlService accessControlService;
 
-    public UserService(UserRepo userRepo, AccessControlService accessControlService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepo userRepo, AlertService alertService, AccessControlService accessControlService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.alertService = alertService;
         this.accessControlService = accessControlService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -68,14 +76,19 @@ public class UserService {
 
     // Function to create a single USER:
     public String addUser(UserCreateDto createDto) {
-
         // Check if the information is valid:
         // will be added later
 
         User user = UserCreateDto.createDtoToUser(createDto);
+
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
         userRepo.save(user);
 
-        return "Created USER with username: " + user.getUsername();
+        alertService.sendEmail(user.getEmail(), "Welcome to Dinit Project", "Your account has been created.");
+        logger.info("The email was sent to: " + user.getEmail());
 
+        return "Created USER with username: " + user.getUsername();
     }
 }

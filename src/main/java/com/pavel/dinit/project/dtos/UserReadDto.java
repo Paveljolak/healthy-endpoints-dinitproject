@@ -21,6 +21,7 @@ public class UserReadDto {
     private Long id;
     private String username;
     private String password;
+    private String email;
     private String role;
 
 
@@ -29,6 +30,7 @@ public class UserReadDto {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
+                user.getEmail(),
                 user.getRole()
         );
     }
@@ -39,6 +41,7 @@ public class UserReadDto {
         user.setId(userReadDto.getId());
         user.setUsername(userReadDto.getUsername());
         user.setPassword(userReadDto.getPassword());
+        user.setEmail(userReadDto.getEmail());
         user.setRole(userReadDto.getRole());
         return user;
     }

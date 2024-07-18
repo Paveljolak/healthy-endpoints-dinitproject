@@ -11,7 +11,7 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### GET request to get a single User based on its ID:
-GET http://localhost:8080/users/2
+GET http://localhost:8080/users/1
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
@@ -28,13 +28,14 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### POST request to add a single User:
-POST http://localhost:8080/register/users
+POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "user8",
-  "password": "user8",
-  "role": "USER"
+  "username": "admin2",
+  "password": "admin2",
+  "email": "somegmail@gmail.com",
+  "role": "ADMIN,USER"
 }
 ###
 

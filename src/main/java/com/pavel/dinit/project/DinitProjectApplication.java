@@ -7,7 +7,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class DinitProjectApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(DinitProjectApplication.class, args);
+
 	}
+
 }
+
+
+

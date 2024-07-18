@@ -27,6 +27,9 @@ public class User {
     private String password;
 
     @Column()
+    private String email;
+
+    @Column()
     private String role; // ADMIN,USER - for admins.
 
     @OneToMany(mappedBy = "addedByUserId", cascade = CascadeType.ALL, orphanRemoval = true)

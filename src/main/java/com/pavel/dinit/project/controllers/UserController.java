@@ -65,7 +65,7 @@ public class UserController {
 
 
     // Requesting creation of a new single USER:
-    @PostMapping
+    @PostMapping("/register")
     public String addUser(@RequestBody UserCreateDto createDto) {
         return userService.addUser(createDto);
     }

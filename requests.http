@@ -21,7 +21,7 @@ GET http://localhost:8080/urls/1/health
 
 ### GET request to get all URL names: checked
 GET http://localhost:8080/urls/names
-Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
 
 ###
 
@@ -34,11 +34,11 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ### POST request to write inside database, hardcoded:
 POST http://localhost:8080/urls
 Content-Type: application/json
-Authorization: Basic {{usernameUser7}} {{passwordUser7}}
+Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
 
 {
-  "urlName": "From User 7",
-  "fullUrl": "https://3kwi2beunreachable.com/"
+  "urlName": "From Admin 2",
+  "fullUrl": "https://youtube.com/"
 }
 
 ###

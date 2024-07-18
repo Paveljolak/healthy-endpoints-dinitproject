@@ -15,6 +15,8 @@ public class UserCreateDto {
 
     private String password;
 
+    private String email;
+
     private String role;
 
 
@@ -23,6 +25,7 @@ public class UserCreateDto {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
+        user.setEmail(dto.getEmail());
         user.setRole(dto.getRole());
         return user;
     }
@@ -33,6 +36,7 @@ public class UserCreateDto {
         return new UserCreateDto(
                 user.getUsername(),
                 user.getPassword(),
+                user.getEmail(),
                 user.getRole()
         );
     }
