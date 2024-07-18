@@ -115,7 +115,7 @@ public class UrlService {
 
         checkIfUrlExists(urlCreateDTO.getFullUrl());
 
-        boolean urlHealth = checkUrlHealth(urlCreateDTO.getFullUrl());
+        boolean urlHealth = checkUrlHealth1(urlCreateDTO.getFullUrl());
 
         Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth, user);
         url.setDateAdded(String.valueOf(LocalDateTime.now())); // Set current timestamp using LocalDateTime
@@ -172,10 +172,8 @@ public class UrlService {
     public boolean checkUrlHealth1(String fullUrl) {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(fullUrl, String.class);
-            logger.info("The healthy URL is:  {}", fullUrl);
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
-            logger.info("The unhealthy URL is:  {}", fullUrl);
             return false;
         }
     }
@@ -201,10 +199,8 @@ public class UrlService {
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
             url.setUrlHealth(isHealthy);
             url.setLastChecked(LocalDateTime.now().toString());
-
         });
         urlRepo.saveAll(urls);
-
     }
 
 

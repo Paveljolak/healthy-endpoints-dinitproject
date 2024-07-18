@@ -61,7 +61,7 @@ public class UrlReadingDto {
         if (logger.isLoggable(Level.INFO)) {
             logger.info("URL validation result for {} is: {}");
         }
-
+        logger.info("This url is: " + isValid + " and we are returning: " + !isValid);
         return !isValid;
     }
 }
