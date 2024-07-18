@@ -11,7 +11,7 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### GET request to get a single User based on its ID:
-GET http://localhost:8080/users/1
+GET http://localhost:8080/users/4
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
@@ -20,7 +20,7 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### DELETE request to delete a single User based on its ID:
-DELETE http://localhost:8080/users/3
+DELETE http://localhost:8080/users/1
 Authorization: Basic {{usernameAdmin1}} {{usernameAdmin1}}
 
 ###
@@ -32,10 +32,10 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "user3",
-  "password": "user3",
-  "email": "somemail@hotmail.com",
+  "password": "ewqe",
+  "email": "eqweq@hotmail.com",
   "role": "USER"
+
 }
 ###
 

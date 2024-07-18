@@ -38,7 +38,7 @@ Authorization: Basic {{usernameUser3}} {{passwordUser3}}
 
 {
   "urlName": "From User 3.2",
-  "fullUrl": "https://netlify.com/"
+  "fullUrl": "https://facebook.com/"
 }
 
 ###

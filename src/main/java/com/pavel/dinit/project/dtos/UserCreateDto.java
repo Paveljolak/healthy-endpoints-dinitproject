@@ -19,6 +19,11 @@ public class UserCreateDto {
 
     private String role;
 
+    private boolean enabled;
+
+    private String verificationCode;
+
+
 
 
     public static User createDtoToUser(UserCreateDto dto){
@@ -27,6 +32,8 @@ public class UserCreateDto {
         user.setPassword(dto.getPassword());
         user.setEmail(dto.getEmail());
         user.setRole(dto.getRole());
+        user.setEnabled(dto.isEnabled());
+        user.setVerificationCode(dto.getVerificationCode());
         return user;
     }
 
@@ -37,7 +44,9 @@ public class UserCreateDto {
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.isEnabled(),
+                user.getVerificationCode()
         );
     }
 

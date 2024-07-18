@@ -1,6 +1,7 @@
 package com.pavel.dinit.project.config;
 
 import com.pavel.dinit.project.components.AuthenticationSuccessHandler;
+import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,15 +29,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-                httpSecurity
-                        .csrf(AbstractHttpConfigurer::disable)
-                        .authorizeHttpRequests(registry -> {
-                            registry.requestMatchers("/urls", "/register/**", "users/register").permitAll();
-                            registry.requestMatchers("/urls/names").hasRole("ADMIN");
-                            registry.requestMatchers("urls/{id}").hasRole("USER");
-                            registry.anyRequest().authenticated();
-                        })
-                        .httpBasic(withDefaults());
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(registry -> {
+                    registry.requestMatchers("/urls", "/register/**", "users/**").permitAll();
+                    registry.requestMatchers("/urls/names").hasRole("ADMIN");
+                    registry.requestMatchers("/urls/{id}").hasRole("USER");
+                    registry.anyRequest().authenticated();
+                })
+                .httpBasic(withDefaults());
+
         return httpSecurity.build();
     }
 

@@ -3,6 +3,7 @@ package com.pavel.dinit.project.services;
 import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
+import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.exceptions.notfound.ResourceNotFound;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.models.User;
@@ -11,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -40,7 +43,7 @@ public class UserService {
     // Function to get all USERS in a list:
     public List<UserReadDto> getAllUsers() {
         List<User> allUsers = userRepo.findAll();
-        if(allUsers.isEmpty()) {
+        if (allUsers.isEmpty()) {
             throw new ResourceNotFound(NO_USERS_STORED_ATM);
         }
         return allUsers.stream().map(UserReadDto::readingDtoFromUser).toList();
@@ -48,39 +51,47 @@ public class UserService {
 
 
     public UserReadDto getUserById(Long userId) {
-        if(userId == null || userId <= 0) {
-            throw new TypeMissmatch("Invalid User ID: " + userId);
-        }
+        validateUserId(userId);
 
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFound("USER with name " + userId + " not found."));
+
         return UserReadDto.readingDtoFromUser(user);
     }
 
 
     // Function to delete a single URL based on its ID:
     public String deleteUserById(Long userId, String username) {
+        validateUserId(userId);
 
         if (!accessControlService.canDeleteUser(userId, username)) {
             throw new UnauthorizedException("Unauthorized.");
         }
 
-        if (!userRepo.existsById(Math.toIntExact(userId))) {
-            throw new ResourceNotFound("There is no user with id " + userId + ".");
-        }
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFound("There is no user with id " + userId + "."));
+
+        checkUserEnabled(user);
         userRepo.deleteById(userId);
+
         return "User with id " + userId + " has been deleted";
     }
 
 
-
-
     // Function to create a single USER:
-    public String addUser(UserCreateDto createDto) {
-        // Check if the information is valid:
-        // will be added later
+    @Transactional
+    public String register(UserCreateDto createDto) {
+        Optional<User> existingUser = userRepo.findByUsername(createDto.getUsername());
+        if (existingUser.isPresent()) {
+            throw new Conflict("Username already exists.");
+        }
+        Optional<User> existingEmail = userRepo.findByEmail(createDto.getEmail());
+        if (existingEmail.isPresent()) {
+            throw new Conflict("Email already exists.");
+        }
+
 
         User user = UserCreateDto.createDtoToUser(createDto);
-
+        user.setEnabled(true);
+        user.setVerificationCode("verification code");
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -91,4 +102,19 @@ public class UserService {
 
         return "Created USER with username: " + user.getUsername();
     }
+
+
+    private void validateUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new TypeMissmatch("Invalid User ID: " + userId);
+        }
+    }
+
+    private void checkUserEnabled(User user) {
+        if (!user.isEnabled()) {
+            throw new UnauthorizedException("User account is not activated.");
+        }
+    }
+
+
 }

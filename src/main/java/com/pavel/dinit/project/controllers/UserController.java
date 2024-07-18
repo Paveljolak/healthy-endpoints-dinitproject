@@ -3,7 +3,9 @@ package com.pavel.dinit.project.controllers;
 
 import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
+import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
+import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -66,8 +68,19 @@ public class UserController {
 
     // Requesting creation of a new single USER:
     @PostMapping("/register")
-    public String addUser(@RequestBody UserCreateDto createDto) {
-        return userService.addUser(createDto);
+    public String register(@RequestBody UserCreateDto createDto) {
+
+        if (createDto.getUsername() == null || createDto.getUsername().isEmpty()) {
+            throw new ApiBadRequest("Username must be specified.");
+        }
+        if (createDto.getPassword() == null || createDto.getPassword().isEmpty()) {
+            throw new ApiBadRequest("Password must be specified.");
+        }
+        if (createDto.getEmail() == null || createDto.getEmail().isEmpty()) {
+            throw new ApiBadRequest("Email must be specified.");
+        }
+
+        return userService.register(createDto);
     }
 
 }

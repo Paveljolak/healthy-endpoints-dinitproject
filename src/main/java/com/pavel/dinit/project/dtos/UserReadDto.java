@@ -23,6 +23,8 @@ public class UserReadDto {
     private String password;
     private String email;
     private String role;
+    private boolean enabled;
+    private String verificationCode;
 
 
     public static UserReadDto readingDtoFromUser(User user) {
@@ -31,7 +33,9 @@ public class UserReadDto {
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.isEnabled(),
+                user.getVerificationCode()
         );
     }
 
@@ -43,6 +47,8 @@ public class UserReadDto {
         user.setPassword(userReadDto.getPassword());
         user.setEmail(userReadDto.getEmail());
         user.setRole(userReadDto.getRole());
+        user.setEnabled(userReadDto.isEnabled());
+        user.setVerificationCode(userReadDto.getVerificationCode());
         return user;
     }
 

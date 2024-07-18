@@ -32,6 +32,12 @@ public class User {
     @Column()
     private String role; // ADMIN,USER - for admins.
 
+    @Column()
+    private boolean enabled;
+
+    @Column()
+    private String verificationCode;
+
     @OneToMany(mappedBy = "addedByUserId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Url> urls;
 
