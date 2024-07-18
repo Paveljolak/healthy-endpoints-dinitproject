@@ -20,8 +20,8 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### DELETE request to delete a single User based on its ID:
-DELETE http://localhost:8080/users/2
-Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+DELETE http://localhost:8080/users/3
+Authorization: Basic {{usernameAdmin1}} {{usernameAdmin1}}
 
 ###
 
@@ -32,10 +32,10 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "admin2",
-  "password": "admin2",
-  "email": "somegmail@gmail.com",
-  "role": "ADMIN,USER"
+  "username": "user3",
+  "password": "user3",
+  "email": "somemail@hotmail.com",
+  "role": "USER"
 }
 ###
 

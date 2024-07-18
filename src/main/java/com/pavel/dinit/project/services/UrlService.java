@@ -202,9 +202,9 @@ public class UrlService {
 
             if (url.getUrlHealth() != isHealthy) {
                 url.setUrlHealth(isHealthy);
-                url.setLastChecked(LocalDateTime.now().toString());
                 alertUser(url);
             }
+            url.setLastChecked(LocalDateTime.now().toString());
         });
         urlRepo.saveAll(urls);
     }

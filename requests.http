@@ -34,11 +34,11 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ### POST request to write inside database, hardcoded:
 POST http://localhost:8080/urls
 Content-Type: application/json
-Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
+Authorization: Basic {{usernameUser3}} {{passwordUser3}}
 
 {
-  "urlName": "From Admin 2",
-  "fullUrl": "https://youtube.com/"
+  "urlName": "From User 3.2",
+  "fullUrl": "https://netlify.com/"
 }
 
 ###
