@@ -33,15 +33,17 @@ public class UrlService {
     private final UserRepo userRepo;
     private final RestTemplate restTemplate;
     private final AccessControlService accessControlService;
+    private final AlertService alertService;
 
     Logger logger = LoggerFactory.getLogger(UrlService.class);
 
 
-    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate, AccessControlService accessControlService) {
+    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate, AccessControlService accessControlService, AlertService alertService) {
         this.urlRepo = urlRepo;
         this.userRepo = userRepo;
         this.restTemplate = restTemplate;
         this.accessControlService = accessControlService;
+        this.alertService = alertService;
     }
 
     // Function to get all the URLS in a list:
@@ -197,12 +199,24 @@ public class UrlService {
 
         urls.forEach(url -> {
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
-            url.setUrlHealth(isHealthy);
-            url.setLastChecked(LocalDateTime.now().toString());
+
+            if (url.getUrlHealth() != isHealthy) {
+                url.setUrlHealth(isHealthy);
+                url.setLastChecked(LocalDateTime.now().toString());
+                alertUser(url);
+            }
         });
         urlRepo.saveAll(urls);
     }
 
+
+    public void alertUser(Url url){
+        User user = url.getAddedByUserId();
+        if (user != null){
+            alertService.sendEmail(user.getEmail(), "URL Health Status Update", "URL: " + url.getUrlName() + " health status changed to: " + url.getUrlHealth() + ".");
+            logger.info("Sent email to users email: " + user.getEmail() + " for URL health status change.");
+        }
+    }
 
     public void editUrl(Long id, UrlCreationDto urlCreateDto, String username) {
 
