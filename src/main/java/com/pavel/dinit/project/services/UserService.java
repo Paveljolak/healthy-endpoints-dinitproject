@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,9 @@ public class UserService {
     private final AccessControlService accessControlService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private static final SecureRandom random = new SecureRandom();
+    private static final String CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public UserService(UserRepo userRepo, AlertService alertService, AccessControlService accessControlService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
@@ -88,10 +92,11 @@ public class UserService {
             throw new Conflict("Email already exists.");
         }
 
+        String verificationCode = generateVerificationCode();
 
         User user = UserCreateDto.createDtoToUser(createDto);
         user.setEnabled(true);
-        user.setVerificationCode("verification code");
+        user.setVerificationCode(verificationCode);
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -114,6 +119,15 @@ public class UserService {
         if (!user.isEnabled()) {
             throw new UnauthorizedException("User account is not activated.");
         }
+    }
+
+    private String generateVerificationCode(){
+        StringBuilder stringBuilder = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            int randomIndex = random.nextInt(CODE_CHARACTERS.length());
+            stringBuilder.append(CODE_CHARACTERS.charAt(randomIndex));
+        }
+        return stringBuilder.toString();
     }
 
 
