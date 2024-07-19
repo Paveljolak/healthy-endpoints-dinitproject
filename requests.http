@@ -27,7 +27,7 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/22564
+DELETE http://localhost:8080/urls/w
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###

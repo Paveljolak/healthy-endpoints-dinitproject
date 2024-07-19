@@ -15,8 +15,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ApiExceptionBase.class)
-    public ResponseEntity<Object> handleApiException(ApiExceptionBase e) {
+
+    private static ResponseEntity<Object> handleApiException(ApiExceptionBase e) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", e.getMessage());
         response.put("status", e.getHttpStatus());
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TypeMissmatch.class)
-    public ResponseEntity<Object> handleTypeMissmatchException(TypeMissmatch e) {
+    public ResponseEntity<Object> handleTypeMismatchException(TypeMissmatch e) {
         return handleApiException(e);
     }
 
