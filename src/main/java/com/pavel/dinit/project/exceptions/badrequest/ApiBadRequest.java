@@ -2,11 +2,10 @@ package com.pavel.dinit.project.exceptions.badrequest;
 
 import com.pavel.dinit.project.exceptions.ApiExceptionBase;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.ZonedDateTime;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+
 public class ApiBadRequest extends ApiExceptionBase {
 
     public ApiBadRequest(String message) {

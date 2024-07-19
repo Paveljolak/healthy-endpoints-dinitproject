@@ -32,9 +32,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "something",
-  "password": "ewqe",
-  "email": "something@hotmail.com",
+  "username": "newUser123",
+  "password": "newUser123",
+  "email": "newUser123@hotmail.com",
   "role": "USER"
 
 }

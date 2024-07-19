@@ -18,4 +18,6 @@ public abstract class ApiExceptionBase extends RuntimeException {
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
     }
+
+
 }

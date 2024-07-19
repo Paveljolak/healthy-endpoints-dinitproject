@@ -4,11 +4,12 @@
 ### GET request to get all URLS:
 GET http://localhost:8080/urls
 
+
 ###
 
 ### GET request to get a single URL based on the unique ID:
 GET http://localhost:8080/urls/10
-Authorization: Basic {{usernameUser6}} {{passwordUser6}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
@@ -21,7 +22,7 @@ GET http://localhost:8080/urls/1/health
 
 ### GET request to get all URL names: checked
 GET http://localhost:8080/urls/names
-Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
