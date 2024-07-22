@@ -62,13 +62,13 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### PUT request to update a single URL based on its ID:
-PUT http://localhost:8080/urls/30
+PUT http://localhost:8080/urls/6
 Content-Type: application/json
-Authorization: Basic {{usernameUser6}} {{passwordUser6}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "urlName": "Unreachable",
-  "fullUrl": "http://thislinkwillbeundreach/"
+  "urlName": "Wrong Github",
+  "fullUrl": "http://githuWrongb.com/"
 }
 
 ###
