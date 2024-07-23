@@ -28,18 +28,26 @@ Authorization: Basic {{usernameAdmin1}} {{usernameAdmin1}}
 
 
 ### POST request to add a single User:
-POST http://localhost:8080/users/register
+POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "newUser12347",
-  "password": "newUser1235",
-  "email": "newUser1235@hotmail.com",
+  "username": "newUser",
+  "password": "newUser",
+  "email": "newUser@hotmail.com",
   "role": "USER"
 
 }
 ###
 
+###
+POST http://localhost:8080/auth/login
+Content-Type: application/json
 
+{
+    "username": "newUser",
+    "password": "newUser"
+}
 
+###
 

@@ -38,8 +38,8 @@ Content-Type: application/json
 Authorization: Basic {{usernameUser3}} {{passwordUser3}}
 
 {
-  "urlName": "From User 3.2",
-  "fullUrl": "https://facebook.com/"
+  "urlName": "Boot Boot",
+  "fullUrl": "https://bootdey.com/"
 }
 
 ###
@@ -62,13 +62,13 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### PUT request to update a single URL based on its ID:
-PUT http://localhost:8080/urls/6
+PUT http://localhost:8080/urls/9
 Content-Type: application/json
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "urlName": "Wrong Github",
-  "fullUrl": "http://githuWrongb.com/"
+  "urlName": "Wrong Again",
+  "fullUrl": "http://bootuWrongb.com/"
 }
 
 ###

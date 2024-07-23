@@ -64,23 +64,4 @@ public class UserController {
             throw new TypeMissmatch(INVALID_USERID + ex.getValue());
         }
     }
-
-
-    // Requesting creation of a new single USER:
-    @PostMapping("/register")
-    public String register(@RequestBody UserCreateDto createDto) {
-
-        if (createDto.getUsername() == null || createDto.getUsername().isEmpty()) {
-            throw new ApiBadRequest("Username must be specified.");
-        }
-        if (createDto.getPassword() == null || createDto.getPassword().isEmpty()) {
-            throw new ApiBadRequest("Password must be specified.");
-        }
-        if (createDto.getEmail() == null || createDto.getEmail().isEmpty()) {
-            throw new ApiBadRequest("Email must be specified.");
-        }
-
-        return userService.register(createDto);
-    }
-
 }
