@@ -32,9 +32,9 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "newUser",
-  "password": "newUser",
-  "email": "newUser@hotmail.com",
+  "username": "lbalblabla",
+  "password": "ballbalba",
+  "email": "albalblabla@hotmail.com",
   "role": "USER"
 
 }
@@ -45,8 +45,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "username": "newUser",
-    "password": "newUser"
+    "username": "user2",
+    "password": "user2"
 }
 
 ###

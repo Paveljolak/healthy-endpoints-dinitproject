@@ -1,7 +1,9 @@
 package com.pavel.dinit.project.services;
 
 import com.pavel.dinit.project.dtos.UserCreateDto;
+import com.pavel.dinit.project.dtos.UserLoginDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
+import com.pavel.dinit.project.dtos.UserRegisterDto;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.models.User;
@@ -37,33 +39,38 @@ public class AuthenticationService {
         this.alertService = alertService;
     }
 
-    // Function to create a single USER:
+
     @Transactional
-    public String register(UserCreateDto createDto) {
-        Optional<User> existingUser = userRepo.findByUsername(createDto.getUsername());
+    public UserCreateDto register(UserRegisterDto registerDto) {
+        Optional<User> existingUser = userRepo.findByUsername(registerDto.getUsername());
         if (existingUser.isPresent()) {
             throw new Conflict("Username already exists.");
         }
-        Optional<User> existingEmail = userRepo.findByEmail(createDto.getEmail());
+        Optional<User> existingEmail = userRepo.findByEmail(registerDto.getEmail());
         if (existingEmail.isPresent()) {
             throw new Conflict("Email already exists.");
         }
 
         String verificationCode = generateVerificationCode();
 
+        UserCreateDto createDto = new UserCreateDto();
+        createDto.setUsername(registerDto.getUsername());
+        createDto.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        createDto.setEmail(registerDto.getEmail());
+        createDto.setRole("USER");
+        createDto.setEnabled(true);
+        createDto.setVerificationCode(verificationCode);
+
         User user = UserCreateDto.createDtoToUser(createDto);
-        user.setEnabled(true);
-        user.setVerificationCode(verificationCode);
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
 
         userRepo.save(user);
 
         alertService.sendEmail(user.getEmail(), "Welcome to Dinit Project", "Your account has been created.");
         logger.info("The email was sent to: " + user.getEmail());
 
-        return "Created USER with username: " + user.getUsername();
+        return UserCreateDto.userCreateDtoFromUser(user);
     }
+
 
     private String generateVerificationCode(){
         StringBuilder stringBuilder = new StringBuilder(10);
@@ -75,7 +82,7 @@ public class AuthenticationService {
     }
 
     @Transactional(readOnly = true)
-    public UserReadDto login(UserCreateDto loginDto) {
+    public UserReadDto login(UserLoginDto loginDto) {
         Optional<User> optionalUser = userRepo.findByUsername(loginDto.getUsername());
         if (optionalUser.isEmpty()) {
             throw new UnauthorizedException("Invalid username or password");

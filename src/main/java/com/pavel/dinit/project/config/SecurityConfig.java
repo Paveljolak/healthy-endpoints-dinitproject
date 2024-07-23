@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/urls", "auth/**", "users/**").permitAll();
-                    registry.requestMatchers("/urls/names").hasRole("ADMIN");
+                    registry.requestMatchers("/urls/names", "/swagger-ui/**").hasRole("ADMIN");
                     registry.requestMatchers("/urls/{id}").hasRole("USER");
                     registry.anyRequest().authenticated();
                 })

@@ -1,7 +1,9 @@
 package com.pavel.dinit.project.controllers;
 
 import com.pavel.dinit.project.dtos.UserCreateDto;
+import com.pavel.dinit.project.dtos.UserLoginDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
+import com.pavel.dinit.project.dtos.UserRegisterDto;
 import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
@@ -32,26 +34,36 @@ public class AuthenticationController {
 
     // Requesting creation of a new single USER:
     @PostMapping("/register")
-    public String register(@RequestBody UserCreateDto createDto) {
-
-        if (createDto.getUsername() == null || createDto.getUsername().isEmpty()) {
+    public String register(@RequestBody UserRegisterDto registerDto) {
+        if (registerDto.getUsername() == null || registerDto.getUsername().isEmpty()) {
             throw new ApiBadRequest("Username must be specified.");
         }
-        if (createDto.getPassword() == null || createDto.getPassword().isEmpty()) {
+        if (registerDto.getPassword() == null || registerDto.getPassword().isEmpty()) {
             throw new ApiBadRequest("Password must be specified.");
         }
-        if (createDto.getEmail() == null || createDto.getEmail().isEmpty()) {
+        if (registerDto.getEmail() == null || registerDto.getEmail().isEmpty()) {
             throw new ApiBadRequest("Email must be specified.");
         }
 
-        return authenticationService.register(createDto);
+        UserCreateDto user = authenticationService.register(registerDto);
+
+        return "Username: " + user.getUsername() +
+                ", Password: " + user.getPassword() +
+                ", Email: " + user.getEmail() +
+                ", Enabled: " + user.isEnabled() +
+                ", Verification Code: " + user.getVerificationCode();
+
     }
 
 
     @PostMapping("/login")
-    public String login(@RequestBody UserCreateDto loginDto) {
-        authenticationService.login(loginDto);
-        return "User is: " + loginDto.getUsername();
+    public String login(@RequestBody UserLoginDto loginDto) {
+        UserReadDto user = authenticationService.login(loginDto);
+        return "Username: " + user.getUsername() +
+                ", Password: " + user.getPassword() +
+                ", Email: " + user.getEmail() +
+                ", Enabled: " + user.isEnabled() +
+                ", Verification Code: " + user.getVerificationCode();
     }
 
 
