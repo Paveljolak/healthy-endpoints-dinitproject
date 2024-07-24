@@ -97,14 +97,15 @@ public class UrlController {
         return urlService.deleteAllUrls(username);
     }
 
-    // Requesting creation of a new single URL based on the NAME:
     @PostMapping
-    public String addUrl(@RequestBody UrlCreationDto createDto) {
-
+    public ResponseEntity<UrlReadingDto> addUrl(@RequestBody UrlCreationDto createDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return urlService.addUrl(createDto, username);
+        UrlReadingDto createdUrl = urlService.addUrl(createDto, username);
+
+        return ResponseEntity.ok(createdUrl); // Return the DTO
     }
+
 
     // Request to check the health of all URLs inside the DB:
     // This will be deleted later, since this function will be used in service:

@@ -110,7 +110,7 @@ public class UrlService {
     // This one will probably read some info that users would give
     // And then write that one:
     @Transactional
-    public String addUrl(UrlCreationDto urlCreateDTO, String username) {
+    public UrlReadingDto addUrl(UrlCreationDto urlCreateDTO, String username) {
         validateUrlCreationDto(urlCreateDTO);
 
         User user = getUserByUsername(username);
@@ -120,12 +120,15 @@ public class UrlService {
         boolean urlHealth = checkUrlHealth1(urlCreateDTO.getFullUrl());
 
         Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth, user);
-        url.setDateAdded(String.valueOf(LocalDateTime.now())); // Set current timestamp using LocalDateTime
+        url.setDateAdded(String.valueOf(LocalDateTime.now())); // Set current timestamp
 
         urlRepo.save(url);
 
-        return "Created URL with ID: " + url.getUrlId();
+        // Convert Url to UrlReadingDto
+        return UrlReadingDto.readingDtoFromUrl(url); // Use DTO to avoid large objects
     }
+
+
 
     private void validateUrlCreationDto(UrlCreationDto urlCreateDTO) {
         if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
