@@ -1,14 +1,13 @@
 package com.pavel.dinit.project.controllers;
 
 
-import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
-import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
-import com.pavel.dinit.project.exceptions.conflict.Conflict;
+import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +53,10 @@ public class UserController {
     public String deleteUserById(@PathVariable String id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                throw new UnauthorizedException("User is not authenticated");
+            }
+
             String username = ((UserDetails) authentication.getPrincipal()).getUsername();
 
             Long userId = Long.parseLong(id);
@@ -62,6 +65,9 @@ public class UserController {
             throw new TypeMissmatch(INVALID_USERID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
             throw new TypeMissmatch(INVALID_USERID + ex.getValue());
+        } catch (AuthenticationException ex) {
+            throw new UnauthorizedException("Authentication failed: " + ex.getMessage());
         }
     }
+
 }

@@ -54,11 +54,12 @@ public class UserService {
 
     // Function to delete a single URL based on its ID:
     public String deleteUserById(Long userId, String username) {
-        validateUserId(userId);
 
         if (!accessControlService.canDeleteUser(userId, username)) {
             throw new UnauthorizedException("Unauthorized.");
         }
+
+        validateUserId(userId);
 
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFound("There is no user with id " + userId + "."));
 

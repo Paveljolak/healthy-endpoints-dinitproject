@@ -32,15 +32,18 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/urls", "auth/**", "users/**").permitAll();
-                    registry.requestMatchers("/urls/names", "/swagger-ui/**").hasRole("ADMIN");
-                    registry.requestMatchers("/urls/{id}").hasRole("USER");
+                    registry.requestMatchers("/urls","/auth/**", "/users/{id}").permitAll();
+                    registry.requestMatchers("/urls/names").hasRole("ADMIN");
+                    registry.requestMatchers("/urls/{id}", "/users/{id}").hasRole("USER");
                     registry.anyRequest().authenticated();
                 })
                 .httpBasic(withDefaults());
 
         return httpSecurity.build();
     }
+
+
+
 
     @Bean
     public UserDetailsService userDetailsService() {

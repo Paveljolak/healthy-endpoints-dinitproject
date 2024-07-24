@@ -5,21 +5,14 @@ import com.pavel.dinit.project.dtos.UserLoginDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.dtos.UserRegisterDto;
 import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
-import com.pavel.dinit.project.exceptions.conflict.Conflict;
-import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
-import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.services.AuthenticationService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.management.remote.JMXAuthenticator;
 
 @RestController
 @RequestMapping("auth")
@@ -34,7 +27,7 @@ public class AuthenticationController {
 
     // Requesting creation of a new single USER:
     @PostMapping("/register")
-    public String register(@RequestBody UserRegisterDto registerDto) {
+    public ResponseEntity<UserCreateDto> register(@RequestBody UserRegisterDto registerDto) {
         if (registerDto.getUsername() == null || registerDto.getUsername().isEmpty()) {
             throw new ApiBadRequest("Username must be specified.");
         }
@@ -46,24 +39,24 @@ public class AuthenticationController {
         }
 
         UserCreateDto user = authenticationService.register(registerDto);
-
-        return "Username: " + user.getUsername() +
-                ", Password: " + user.getPassword() +
-                ", Email: " + user.getEmail() +
-                ", Enabled: " + user.isEnabled() +
-                ", Verification Code: " + user.getVerificationCode();
-
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(user);
     }
 
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginDto loginDto) {
+    public ResponseEntity<UserReadDto> login(@RequestBody UserLoginDto loginDto) {
         UserReadDto user = authenticationService.login(loginDto);
-        return "Username: " + user.getUsername() +
-                ", Password: " + user.getPassword() +
-                ", Email: " + user.getEmail() +
-                ", Enabled: " + user.isEnabled() +
-                ", Verification Code: " + user.getVerificationCode();
+
+        UserReadDto responseDto = new UserReadDto();
+        responseDto.setUsername(user.getUsername());
+        responseDto.setPassword(user.getPassword()); // Ideally, do not expose passwords
+        responseDto.setEmail(user.getEmail());
+        responseDto.setEnabled(user.isEnabled());
+        responseDto.setVerificationCode(user.getVerificationCode());
+
+        return ResponseEntity.ok(responseDto);
     }
 
 

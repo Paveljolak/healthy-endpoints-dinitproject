@@ -10,24 +10,25 @@ import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AuthenticationService {
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
+    Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     private static final SecureRandom random = new SecureRandom();
     private static final String CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    );
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
@@ -49,6 +50,11 @@ public class AuthenticationService {
         Optional<User> existingEmail = userRepo.findByEmail(registerDto.getEmail());
         if (existingEmail.isPresent()) {
             throw new Conflict("Email already exists.");
+        }
+
+        // Validate email format
+        if (!isValidEmail(registerDto.getEmail())) {
+            throw new Conflict("Invalid email format.");
         }
 
         String verificationCode = generateVerificationCode();
@@ -79,6 +85,11 @@ public class AuthenticationService {
             stringBuilder.append(CODE_CHARACTERS.charAt(randomIndex));
         }
         return stringBuilder.toString();
+    }
+
+    private boolean isValidEmail(String email) {
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        return matcher.matches();
     }
 
     @Transactional(readOnly = true)
