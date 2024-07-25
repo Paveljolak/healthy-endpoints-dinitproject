@@ -47,9 +47,14 @@ public class UserReadDto {
         user.setPassword(userReadDto.getPassword());
         user.setEmail(userReadDto.getEmail());
         user.setRole(userReadDto.getRole());
-        user.setEnabled(userReadDto.isEnabled());
+        user.setEnabled(userReadDto.getEnabled());
         user.setVerificationCode(userReadDto.getVerificationCode());
         return user;
+    }
+
+
+    public Boolean getEnabled() {
+        return enabled;
     }
 
 

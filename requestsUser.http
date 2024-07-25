@@ -5,6 +5,7 @@
 ### GET request to get all URLS:
 GET http://localhost:8080/users
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+
 ###
 
 
@@ -20,8 +21,8 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### DELETE request to delete a single User based on its ID:
-DELETE http://localhost:8080/users/21
-Authorization: Basic {{usernameUser2}} {{passwordUser2}}
+DELETE http://localhost:8080/users/47
+Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
 
 
 ###
@@ -33,11 +34,13 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "314",
-  "password": "314",
-  "email": "314@gmail.com"
+  "username": "admin1",
+  "password": "admin1",
+  "email": "paveljolak123@gmail.com",
+  "role": "ADMIN,USER"
 }
 ###
+
 
 ###
 POST http://localhost:8080/auth/login
@@ -52,3 +55,18 @@ Content-Type: application/json
 
 
 
+### PUT request to edit a single User based on its ID:
+PATCH http://localhost:8080/users/edit/4
+Content-Type: application/json
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+
+{
+  "username": "changedUser",
+  "password": "changedPassword",
+  "email": "changedEmail@gmail.com"
+
+
+
+}
+
+###

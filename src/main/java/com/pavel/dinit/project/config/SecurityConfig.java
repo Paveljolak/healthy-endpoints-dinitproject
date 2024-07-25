@@ -32,8 +32,8 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/urls","/auth/**", "/users/{id}").permitAll();
-                    registry.requestMatchers("/urls/names").hasRole("ADMIN");
+                    registry.requestMatchers("/urls","/auth/**").permitAll();
+                    registry.requestMatchers("/urls/names", "/users/edit/{id}").hasRole("ADMIN");
                     registry.requestMatchers("/urls/{id}", "/users/{id}").hasRole("USER");
                     registry.anyRequest().authenticated();
                 })
@@ -74,7 +74,7 @@ public class SecurityConfig {
                 "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
                 "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);

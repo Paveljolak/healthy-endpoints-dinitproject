@@ -66,8 +66,22 @@ public class AccessControlService {
         User userToDelete = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found."));
 
-        // Check if user is admin or if the user owns the account
         return isAdmin(requestingUsername) || requestingUsername.equals(userToDelete.getUsername());
     }
+
+    public boolean canEditUser(Long userIdToEdit, String requestingUsername) {
+        // Check if the user requesting the edit is an admin
+        if (isAdmin(requestingUsername)) {
+            return true;
+        }
+
+        // Find the user to be edited
+        User userToEdit = userRepo.findById(userIdToEdit)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userIdToEdit + " not found."));
+
+        // Check if the user requesting the edit is the same as the user to be edited
+        return requestingUsername.equals(userToEdit.getUsername());
+    }
+
 
 }

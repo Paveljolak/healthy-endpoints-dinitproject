@@ -1,5 +1,7 @@
 package com.pavel.dinit.project.controllers;
 
+import com.pavel.dinit.project.dtos.EditUserDto;
+import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
@@ -66,6 +68,24 @@ public class UserController {
             throw new TypeMissmatch(INVALID_USERID + ex.getValue());
         } catch (AuthenticationException ex) {
             throw new UnauthorizedException("Authentication failed: " + ex.getMessage());
+        }
+    }
+
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<Void> editUser(
+            @PathVariable String id,
+            @RequestBody UserReadDto editUserRequest) {
+        try {
+            Long userId = Long.parseLong(id);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+            userService.editUser(userId, editUserRequest, username);
+            return ResponseEntity.noContent().build();
+        } catch (NumberFormatException ex) {
+            throw new TypeMissmatch(INVALID_USERID + id);
+        } catch (MethodArgumentTypeMismatchException ex) {
+            throw new TypeMissmatch(INVALID_USERID + ex.getValue());
         }
     }
 
