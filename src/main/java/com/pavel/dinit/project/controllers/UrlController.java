@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Validated
@@ -74,7 +76,7 @@ public class UrlController {
 
     // Requesting a deletion of a single URL based on the ID:
     @DeleteMapping("/{id}")
-    public String deleteUrlById(@PathVariable String id) {
+    public ResponseEntity<Map<String, String>> deleteUrlById(@PathVariable String id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = ((UserDetails) authentication.getPrincipal()).getUsername();
@@ -82,11 +84,11 @@ public class UrlController {
             Long urlId = Long.parseLong(id);
             return urlService.deleteUrlById(urlId, username);
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch(INVALID_URLID + id);
+            throw new TypeMissmatch("Invalid URL ID: " + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
+            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
         }
-    }
+    }   
 
     // Requesting a deletion of a single URL based on the ID:
     @DeleteMapping

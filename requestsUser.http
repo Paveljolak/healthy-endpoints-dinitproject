@@ -4,7 +4,7 @@
 
 ### GET request to get all URLS:
 GET http://localhost:8080/users
-
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ###
 
 
@@ -33,9 +33,9 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "kurva",
-  "password": "kurva",
-  "email": "kurva@gmail.com"
+  "username": "314",
+  "password": "314",
+  "email": "314@gmail.com"
 }
 ###
 
@@ -44,8 +44,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "username": "ewq",
-    "password": "user2"
+    "username": "admin1",
+    "password": "admin1"
 }
 
 ###

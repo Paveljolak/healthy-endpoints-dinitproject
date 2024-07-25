@@ -49,14 +49,8 @@ public class AuthenticationController {
     public ResponseEntity<UserReadDto> login(@RequestBody UserLoginDto loginDto) {
         UserReadDto user = authenticationService.login(loginDto);
 
-        UserReadDto responseDto = new UserReadDto();
-        responseDto.setUsername(user.getUsername());
-        responseDto.setPassword(user.getPassword()); // Ideally, do not expose passwords
-        responseDto.setEmail(user.getEmail());
-        responseDto.setEnabled(user.isEnabled());
-        responseDto.setVerificationCode(user.getVerificationCode());
-
-        return ResponseEntity.ok(responseDto);
+        // Return the full user information
+        return ResponseEntity.ok(user);
     }
 
 

@@ -8,10 +8,14 @@ import com.pavel.dinit.project.models.User;
 import com.pavel.dinit.project.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -53,7 +57,7 @@ public class UserService {
 
 
     // Function to delete a single URL based on its ID:
-    public String deleteUserById(Long userId, String username) {
+    public ResponseEntity<Map<String, String>> deleteUserById(Long userId, String username) {
 
         if (!accessControlService.canDeleteUser(userId, username)) {
             throw new UnauthorizedException("Unauthorized.");
@@ -66,7 +70,10 @@ public class UserService {
         checkUserEnabled(user);
         userRepo.deleteById(userId);
 
-        return "User with id " + userId + " has been deleted";
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User with id " + userId + " has been deleted");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

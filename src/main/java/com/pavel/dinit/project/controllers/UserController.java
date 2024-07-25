@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("users")
@@ -47,9 +48,8 @@ public class UserController {
     }
 
 
-    // Requesting a deletion of a single USER based on its ID:
     @DeleteMapping("/{id}")
-    public String deleteUserById(@PathVariable String id) {
+    public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable String id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()) {

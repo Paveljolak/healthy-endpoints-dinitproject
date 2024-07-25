@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -78,17 +80,21 @@ public class UrlService {
     }
 
     // Function to delete a single URL based on its ID:
-    public String deleteUrlById(Long urlId, String username) {
-
+    @Transactional
+    public ResponseEntity<Map<String, String>> deleteUrlById(Long urlId, String username) {
         if (!accessControlService.canDelete(urlId, username)) {
-            throw new SecurityException("You are not authorized to edit this URL.");
+            throw new UnauthorizedException("You are not authorized to delete this URL.");
         }
 
         if (!urlRepo.existsById(urlId)) {
-            throw new ResourceNotFound("There is no url with id " + urlId + ".");
+            throw new ResourceNotFound("There is no URL with id " + urlId + ".");
         }
-        urlRepo.deleteByUrlId(urlId);
-        return "Url with id " + urlId + " has been deleted";
+        urlRepo.deleteById(urlId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "URL with id " + urlId + " has been deleted");
+
+        return ResponseEntity.ok(response);
     }
 
     // Function to delete all URLs:
