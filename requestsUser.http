@@ -36,7 +36,7 @@ Content-Type: application/json
 {
   "username": "admin1",
   "password": "admin1",
-  "email": "paveljolak123@gmail.com",
+  "email": "swfdw@gmail.com",
   "role": "ADMIN,USER"
 }
 ###
@@ -63,10 +63,9 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 {
   "username": "changedUser",
   "password": "changedPassword",
-  "email": "changedEmail@gmail.com"
-
-
-
+  "email": "changedEmail@gmail.com",
+  "role": "USER",
+  "enabled": true
 }
 
 ###
