@@ -1,7 +1,5 @@
 package com.pavel.dinit.project.controllers;
 
-import com.pavel.dinit.project.dtos.EditUserDto;
-import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;

@@ -27,19 +27,19 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/7
-Authorization: Basic {{usernameUser2}} {{passwordUser2}}
+DELETE http://localhost:8080/urls/32
+Authorization: Basic {{tester}} {{testerPass}}
 
 ###
 
 ### POST request to write inside database, hardcoded:
 POST http://localhost:8080/urls
 Content-Type: application/json
-Authorization: Basic {{usernameUser3}} {{passwordUser3}}
+Authorization: Basic {{tester}} {{testerPass}}
 
 {
-  "urlName": "Boot Boot",
-  "fullUrl": "https://bootdey1.com/"
+  "urlName": "thisIsForTestingPur",
+  "fullUrl": "https://thisIsForTestingPur.com/3"
 }
 
 ###
@@ -47,7 +47,7 @@ Authorization: Basic {{usernameUser3}} {{passwordUser3}}
 
 ### PATCH request to check and update all of the url healths
 PATCH http://localhost:8080/urls/checkHealthAll
-
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
@@ -56,37 +56,22 @@ PATCH http://localhost:8080/urls/checkHealthAll
 
 ### GET request to get all URLS: checked
 DELETE http://localhost:8080/urls
-Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+Authorization: Basic {{tester}} {{testerPass}}
 
 ###
 
 
 ### PUT request to update a single URL based on its ID:
-PUT http://localhost:8080/urls/9
+PUT http://localhost:8080/urls/33
 Content-Type: application/json
-Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+Authorization: Basic {{tester}} {{testerPass}}
 
 {
-  "urlName": "Wrong Again",
-  "fullUrl": "http://bootuWrongb.com/"
+  "urlName": "testingPurposesEdited",
+  "fullUrl": "https://testingPurposesEdited.com/"
 }
 
 ###
-
-
-### POST request for user registration
-POST http://localhost:8080/register/user
-Content-Type: application/json
-
-{
-  "id": "3",
-  "password": "user",
-  "role": "USER",
-  "username": "user"
-}
-###
-
-
 
 
 

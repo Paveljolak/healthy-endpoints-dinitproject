@@ -1,7 +1,5 @@
 package com.pavel.dinit.project.services;
 
-import com.pavel.dinit.project.dtos.EditUserDto;
-import com.pavel.dinit.project.dtos.UserCreateDto;
 import com.pavel.dinit.project.dtos.UserReadDto;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
@@ -36,10 +34,10 @@ public class UserService {
 
 
 
-    public UserService(UserRepo userRepo, AlertService alertService, AccessControlService accessControlService, PasswordEncoder passwordEncoder, PasswordEncoder passwordEncoder1) {
+    public UserService(UserRepo userRepo, AccessControlService accessControlService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.accessControlService = accessControlService;
-        this.passwordEncoder = passwordEncoder1;
+        this.passwordEncoder = passwordEncoder;
     }
 
 

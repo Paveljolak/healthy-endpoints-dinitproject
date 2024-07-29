@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ public class UrlController {
     }
 
     // Requesting all the URL'S names:
-    // Only for quick testing, will delete later:
     @GetMapping("/names")
     public List<Object> getUrlNames() {
         return urlService.getAllUrlNames();
@@ -84,9 +82,9 @@ public class UrlController {
             Long urlId = Long.parseLong(id);
             return urlService.deleteUrlById(urlId, username);
         } catch (NumberFormatException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + id);
+            throw new TypeMissmatch(INVALID_URLID + id);
         } catch (MethodArgumentTypeMismatchException ex) {
-            throw new TypeMissmatch("Invalid URL ID: " + ex.getValue());
+            throw new TypeMissmatch(INVALID_URLID + ex.getValue());
         }
     }   
 
@@ -110,7 +108,6 @@ public class UrlController {
 
 
     // Request to check the health of all URLs inside the DB:
-    // This will be deleted later, since this function will be used in service:
     @PatchMapping("/checkHealthAll")
     public ResponseEntity<String> checkAllUrlsHealth() {
         urlService.checkAllUrlsHealth();

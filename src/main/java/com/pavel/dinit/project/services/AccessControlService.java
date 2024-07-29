@@ -13,6 +13,9 @@ import java.util.Optional;
 @Service
 public class AccessControlService {
 
+    private static final String USER_NOT_FOUND_MSG = "User with username %s not found.";
+    private static final String USER_ID_NO_FOUND_MSG = "User with id %d not found.";
+
     private final UserRepo userRepo;
     private final UrlRepo urlRepo;
 
@@ -24,31 +27,13 @@ public class AccessControlService {
 
     public boolean isAdmin(String username) {
         User user = userRepo.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
         return "ADMIN,USER".equalsIgnoreCase(user.getRole());
     }
 
-    public boolean canEdit(Long urlId, String username) {
+    public boolean canAlter(Long urlId, String username) {
         User user = userRepo.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
-
-        Optional<Url> optionalUrl = urlRepo.findById(urlId);
-        if (optionalUrl.isEmpty()) {
-            throw new ResourceNotFoundException("URL with ID " + urlId + " not found.");
-        }
-
-        Url url = optionalUrl.get();
-
-        // Check if user is admin or if the user owns the URL
-        return isAdmin(username) || user.getId().equals(url.getAddedByUserId().getId());
-    }
-
-
-    // The code is duplicated for now, since we have one for updating one for deleting:
-    // So we can easily change which users we want to let to have permissions.
-    public boolean canDelete(Long urlId, String username) {
-        User user = userRepo.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
 
         Optional<Url> optionalUrl = urlRepo.findById(urlId);
         if (optionalUrl.isEmpty()) {
@@ -64,7 +49,7 @@ public class AccessControlService {
 
     public boolean canDeleteUser(Long userId, String requestingUsername) {
         User userToDelete = userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(USER_ID_NO_FOUND_MSG, userId)));
 
         return isAdmin(requestingUsername) || requestingUsername.equals(userToDelete.getUsername());
     }
@@ -77,7 +62,7 @@ public class AccessControlService {
 
         // Find the user to be edited
         User userToEdit = userRepo.findById(userIdToEdit)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userIdToEdit + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(USER_ID_NO_FOUND_MSG, userIdToEdit)));
 
         // Check if the user requesting the edit is the same as the user to be edited
         return requestingUsername.equals(userToEdit.getUsername());

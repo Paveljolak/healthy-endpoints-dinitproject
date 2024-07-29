@@ -72,7 +72,8 @@ public class AuthenticationService {
         userRepo.save(user);
 
         alertService.sendEmail(user.getEmail(), "Welcome to Dinit Project", "Your account has been created.");
-        logger.info("The email was sent to: " + user.getEmail());
+        logger.info("The email was sent to: {}", user.getEmail());
+
 
         return UserCreateDto.userCreateDtoFromUser(user);
     }

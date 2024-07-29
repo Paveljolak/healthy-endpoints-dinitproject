@@ -34,12 +34,6 @@ public class GlobalExceptionHandler {
         return handleApiException(e);
     }
 
-//    @ExceptionHandler(UnauthorizedException.class)
-//    @ResponseBody
-//    public String handleUnauthorizedException(UnauthorizedException ex) {
-//        return ex.getMessage();
-//    }
-
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody

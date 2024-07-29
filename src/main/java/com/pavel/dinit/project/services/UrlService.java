@@ -23,13 +23,17 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.pavel.dinit.project.dtos.UrlReadingDto.checkUrlValidity;
 
 @Service
 public class UrlService {
 
     private static final String NO_URLS_STORED_ATM = "There are no URLs stored at the moment.";
+    private static final String URL_ALREADY_EXISTS = "URL already exists.";
+    private static final String INVALID_URL_FORMAT = "Invalid URL format.";
+
 
     private final UrlRepo urlRepo;
     private final UserRepo userRepo;
@@ -82,7 +86,7 @@ public class UrlService {
     // Function to delete a single URL based on its ID:
     @Transactional
     public ResponseEntity<Map<String, String>> deleteUrlById(Long urlId, String username) {
-        if (!accessControlService.canDelete(urlId, username)) {
+        if (!accessControlService.canAlter(urlId, username)) {
             throw new UnauthorizedException("You are not authorized to delete this URL.");
         }
 
@@ -112,26 +116,32 @@ public class UrlService {
     }
 
 
-    // Function to add a single URL:
-    // This one will probably read some info that users would give
-    // And then write that one:
     @Transactional
     public UrlReadingDto addUrl(UrlCreationDto urlCreateDTO, String username) {
-        validateUrlCreationDto(urlCreateDTO);
+        validateUrlCreationDto(urlCreateDTO); // Validate the DTO
+        User user = getUserByUsername(username); // Get the user making the request
+        String fullUrl = urlCreateDTO.getFullUrl(); // Get the URL to be added
 
-        User user = getUserByUsername(username);
+        // Validate the URL format
+        if (!checkUrlValidity(fullUrl)) {
+            throw new Conflict(INVALID_URL_FORMAT);
+        }
 
-        checkIfUrlExists(urlCreateDTO.getFullUrl());
+        // Check if the URL already exists
+        if (urlRepo.findByFullUrl(fullUrl).isPresent()) {
+            throw new Conflict(URL_ALREADY_EXISTS);
+        }
 
-        boolean urlHealth = checkUrlHealth1(urlCreateDTO.getFullUrl());
+        // Check the URL health
+        boolean urlHealth = checkUrlHealth1(fullUrl);
 
+        // Create the URL entity and save it
         Url url = UrlCreationDto.creationToUrlEnt(urlCreateDTO, urlHealth, user);
         url.setDateAdded(String.valueOf(LocalDateTime.now())); // Set current timestamp
-
         urlRepo.save(url);
 
-        // Convert Url to UrlReadingDto
-        return UrlReadingDto.readingDtoFromUrl(url); // Use DTO to avoid large objects
+        // Return the URL reading DTO
+        return UrlReadingDto.readingDtoFromUrl(url);
     }
 
 
@@ -140,8 +150,8 @@ public class UrlService {
         if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
             throw new Conflict("There is no URL specified.");
         }
-        if (UrlReadingDto.checkUrlValidity(urlCreateDTO.getFullUrl())) {
-            throw new Conflict("Invalid URL format.");
+        if (!checkUrlValidity(urlCreateDTO.getFullUrl())) {
+            throw new Conflict(INVALID_URL_FORMAT);
         }
         if (urlCreateDTO.getUrlName() == null || urlCreateDTO.getUrlName().isEmpty()) {
             throw new Conflict("There is no URL name specified.");
@@ -151,13 +161,6 @@ public class UrlService {
     private User getUserByUsername(String username) {
         return userRepo.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found."));
-    }
-
-    private void checkIfUrlExists(String fullUrl) {
-        Optional<Url> existingUrl = urlRepo.findByFullUrl(fullUrl);
-        if (existingUrl.isPresent()) {
-            throw new Conflict("URL already exists.");
-        }
     }
 
     // Function for checking if an url is healthy or not.
@@ -173,7 +176,7 @@ public class UrlService {
                 return false;
             }
         } catch (ApiBadRequest e) {
-            e.printStackTrace();
+            logger.error("API request failed for URL: {}", fullUrl, e);
             return false;
         }
     }
@@ -223,51 +226,55 @@ public class UrlService {
         User user = url.getAddedByUserId();
         if (user != null){
             alertService.sendEmail(user.getEmail(), "URL Health Status Update", "URL: " + url.getUrlName() + " health status changed to: " + url.getUrlHealth() + ".");
-            logger.info("Sent email to users email: " + user.getEmail() + " for URL health status change.");
+            logger.info("Sent email to user's email: {} for URL health status change.", user.getEmail());
+
         }
     }
 
     public void editUrl(Long id, UrlCreationDto urlCreateDto, String username) {
 
-        if (!accessControlService.canEdit(id, username)) {
-            throw new SecurityException("You are not authorized to edit this URL.");
+        // Check access control
+        if (!accessControlService.canAlter(id, username)) {
+            throw new UnauthorizedException("You are not authorized to edit this URL.");
         }
 
-        Optional<Url> optionalUrl = urlRepo.findById(id);
-        if (optionalUrl.isPresent()) {
-            Url url = optionalUrl.get();
+        // Fetch the URL to be updated
+        Url url = urlRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("There is no URL with id " + id + "."));
 
-            // Checking the name:
-            if (urlCreateDto.getUrlName() != null && !urlCreateDto.getUrlName().isEmpty()) {
-                url.setUrlName(urlCreateDto.getUrlName());
-            } else {
-                throw new Conflict("URL name must be specified.");
-            }
+        // Update the URL name
+        String newName = urlCreateDto.getUrlName();
+        if (newName == null || newName.isEmpty()) {
+            throw new Conflict("URL name must be specified.");
+        }
+        url.setUrlName(newName);
 
-            // Checking the FullUrl:
-            if (urlCreateDto.getFullUrl() != null && !urlCreateDto.getFullUrl().isEmpty()) {
+        // Update the Full URL
+        String newFullUrl = urlCreateDto.getFullUrl();
+        if (newFullUrl != null && !newFullUrl.isEmpty()) {
+            String currentFullUrl = url.getFullUrl();
 
-                if (!urlCreateDto.getFullUrl().equals(url.getFullUrl())) {
-                    if (UrlReadingDto.checkUrlValidity(urlCreateDto.getFullUrl())) {
-                        throw new Conflict("Invalid URL format.");
-                    }
-
-                    Optional<Url> existingUrl = urlRepo.findByFullUrl(urlCreateDto.getFullUrl());
-                    if (existingUrl.isPresent()) {
-                        throw new Conflict("URL already exists.");
-                    }
-                    url.setFullUrl(urlCreateDto.getFullUrl());
+            // Only validate if the new URL is different from the current one
+            if (!newFullUrl.equals(currentFullUrl)) {
+                if (!checkUrlValidity(newFullUrl)) {
+                    throw new Conflict(INVALID_URL_FORMAT);
                 }
-            } else {
-                throw new Conflict("There is no URL specified.");
+
+                boolean urlExists = urlRepo.findByFullUrl(newFullUrl).isPresent();
+                if (urlExists) {
+                    throw new Conflict(URL_ALREADY_EXISTS);
+                }
+
+                url.setFullUrl(newFullUrl);
             }
-
-            urlRepo.save(url);
-
         } else {
-            throw new ResourceNotFound("There is no url with id " + id + ".");
+            throw new Conflict("There is no URL specified.");
         }
+
+        // Save the updated URL
+        urlRepo.save(url);
     }
+
 
 
 }

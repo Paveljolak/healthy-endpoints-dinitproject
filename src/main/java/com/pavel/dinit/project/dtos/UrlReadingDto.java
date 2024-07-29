@@ -51,17 +51,19 @@ public class UrlReadingDto {
     }
 
     public static boolean checkUrlValidity(String fullUrl) {
+        // Regex pattern to validate URLs
         String fullUrlRegex = "^(http|https)://[-a-zA-Z0-9+&@#/%?=~_|,!:.;]*[-a-zA-Z0-9+@#/%=&_|]";
         Pattern pattern = Pattern.compile(fullUrlRegex);
-        Matcher m = pattern.matcher(fullUrl);
+        Matcher matcher = pattern.matcher(fullUrl);
 
-        boolean isValid = m.matches();
+        boolean isValid = matcher.matches();
 
-        // Log only if the logging level is appropriate
+        // Log the result of URL validation
         if (logger.isLoggable(Level.INFO)) {
-            logger.info("URL validation result for {} is: {}");
+            logger.info("URL validation result for '" + fullUrl + "' is: " + isValid);
         }
-        logger.info("This url is: " + isValid + " and we are returning: " + !isValid);
-        return !isValid;
+
+        // Return true if the URL is valid, false otherwise
+        return isValid;
     }
 }

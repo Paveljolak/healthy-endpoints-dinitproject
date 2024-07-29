@@ -21,8 +21,8 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### DELETE request to delete a single User based on its ID:
-DELETE http://localhost:8080/users/47
-Authorization: Basic {{usernameAdmin2}} {{passwordAdmin2}}
+DELETE http://localhost:8080/users/82
+Authorization: Basic {{tester}} {{testerPass}}
 
 
 ###
@@ -34,10 +34,10 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "admin1",
-  "password": "admin1",
-  "email": "swfdw@gmail.com",
-  "role": "ADMIN,USER"
+  "username": "testingCleanUp",
+  "password": "testingCleanUp",
+  "email": "testingCleanUp@gmail.com",
+  "role": "USER"
 }
 ###
 
@@ -47,8 +47,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "username": "admin1",
-    "password": "admin1"
+    "username": "testingCleanUp",
+    "password": "testingCleanUp"
 }
 
 ###
@@ -56,14 +56,14 @@ Content-Type: application/json
 
 
 ### PUT request to edit a single User based on its ID:
-PATCH http://localhost:8080/users/edit/4
+PATCH http://localhost:8080/users/edit/83
 Content-Type: application/json
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "username": "changedUser",
-  "password": "changedPassword",
-  "email": "changedEmail@gmail.com",
+  "username": "testingCleanUp",
+  "password": "testingCleanUp",
+  "email": "testingCleanUp@gmail.com",
   "role": "USER",
   "enabled": true
 }
