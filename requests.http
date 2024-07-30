@@ -15,8 +15,8 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### GET request to read URLs health: checked
-GET http://localhost:8080/urls/1/health
-
+GET http://localhost:8080/urls/5/health
+Authorization: Basic {{tester}} {{testerPass}}
 
 ###
 
@@ -27,19 +27,19 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 ###
 
 ### DELETE request to delete a single URL by its id:
-DELETE http://localhost:8080/urls/32
-Authorization: Basic {{tester}} {{testerPass}}
+DELETE http://localhost:8080/urls/1
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###
 
 ### POST request to write inside database, hardcoded:
 POST http://localhost:8080/urls
 Content-Type: application/json
-Authorization: Basic {{tester}} {{testerPass}}
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "urlName": "thisIsForTestingPur",
-  "fullUrl": "https://thisIsForTestingPur.com/3"
+  "urlName": "admin",
+  "fullUrl": "https://github.com"
 }
 
 ###
@@ -53,7 +53,6 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 
-
 ### GET request to get all URLS: checked
 DELETE http://localhost:8080/urls
 Authorization: Basic {{tester}} {{testerPass}}
@@ -62,12 +61,12 @@ Authorization: Basic {{tester}} {{testerPass}}
 
 
 ### PUT request to update a single URL based on its ID:
-PUT http://localhost:8080/urls/33
+PUT http://localhost:8080/urls/5
 Content-Type: application/json
-Authorization: Basic {{tester}} {{testerPass}}
+Authorization: Basic tester tester
 
 {
-  "urlName": "testingPurposesEdited",
+  "urlName": "Something new",
   "fullUrl": "https://testingPurposesEdited.com/"
 }
 

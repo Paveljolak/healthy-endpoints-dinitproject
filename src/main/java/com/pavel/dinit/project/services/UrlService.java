@@ -5,7 +5,9 @@ import com.pavel.dinit.project.dtos.UrlReadingDto;
 import com.pavel.dinit.project.exceptions.unauthorized.UnauthorizedException;
 import com.pavel.dinit.project.exceptions.badrequest.ApiBadRequest;
 import com.pavel.dinit.project.models.Url;
+import com.pavel.dinit.project.models.UrlHealthHistory;
 import com.pavel.dinit.project.models.User;
+import com.pavel.dinit.project.repo.UrlHealthHistoryRepo;
 import com.pavel.dinit.project.repo.UrlRepo;
 import com.pavel.dinit.project.exceptions.badrequest.TypeMissmatch;
 import com.pavel.dinit.project.exceptions.conflict.Conflict;
@@ -37,6 +39,7 @@ public class UrlService {
 
     private final UrlRepo urlRepo;
     private final UserRepo userRepo;
+    private final UrlHealthHistoryRepo urlHealthHistoryRepo;
     private final RestTemplate restTemplate;
     private final AccessControlService accessControlService;
     private final AlertService alertService;
@@ -44,9 +47,10 @@ public class UrlService {
     Logger logger = LoggerFactory.getLogger(UrlService.class);
 
 
-    public UrlService(UrlRepo urlRepo, UserRepo userRepo, RestTemplate restTemplate, AccessControlService accessControlService, AlertService alertService) {
+    public UrlService(UrlRepo urlRepo, UserRepo userRepo, UrlHealthHistoryRepo urlHealthHistoryRepo, RestTemplate restTemplate, AccessControlService accessControlService, AlertService alertService) {
         this.urlRepo = urlRepo;
         this.userRepo = userRepo;
+        this.urlHealthHistoryRepo = urlHealthHistoryRepo;
         this.restTemplate = restTemplate;
         this.accessControlService = accessControlService;
         this.alertService = alertService;
@@ -193,11 +197,31 @@ public class UrlService {
     }
 
     // Function to return if url is healthy or not:
+    @Transactional
     public boolean checkUrlHealthById(Long id) {
-        UrlReadingDto url = getUrlById(id);
+        // Fetch URL using DTO
+        Url url = urlRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("URL with ID " + id + " not found."));
+
         String fullUrl = url.getFullUrl();
-        return checkUrlHealth1(fullUrl);
+        boolean health = checkUrlHealth1(fullUrl);
+
+        // Update the URL with the latest health status
+        url.setUrlHealth(health);
+        url.setLastChecked(LocalDateTime.now().toString());
+        urlRepo.save(url);
+
+        // Record health status in the history table
+        UrlHealthHistory history = new UrlHealthHistory();
+        history.setUrlId(url); // Set the URL entity reference
+        history.setHealthStatus(health);
+        history.setTimestamp(LocalDateTime.now());
+
+        urlHealthHistoryRepo.save(history);
+
+        return health;
     }
+
 
 
     // Function to check and update all the URLS healths, im not sure how to write this XD
@@ -210,16 +234,29 @@ public class UrlService {
         }
 
         urls.forEach(url -> {
+            // Check the health of the URL
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
 
-            if (url.getUrlHealth() != isHealthy) {
-                url.setUrlHealth(isHealthy);
-                alertUser(url);
-            }
+            // Update URL health status and last checked timestamp
+            url.setUrlHealth(isHealthy);
             url.setLastChecked(LocalDateTime.now().toString());
+
+            // Save the updated URL
+            urlRepo.save(url);
+
+            // Record health status in the history table
+            UrlHealthHistory history = new UrlHealthHistory();
+            history.setUrlId(url); // Set the URL entity reference
+            history.setHealthStatus(isHealthy);
+            history.setTimestamp(LocalDateTime.now());
+
+            urlHealthHistoryRepo.save(history);
+
+            // Alert the user about the health status change
+            alertUser(url);
         });
-        urlRepo.saveAll(urls);
     }
+
 
 
     public void alertUser(Url url){

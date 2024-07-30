@@ -25,6 +25,7 @@ DELETE http://localhost:8080/users/82
 Authorization: Basic {{tester}} {{testerPass}}
 
 
+
 ###
 
 
@@ -34,9 +35,9 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "testingCleanUp",
-  "password": "testingCleanUp",
-  "email": "testingCleanUp@gmail.com",
+  "username": "tester",
+  "password": "tester",
+  "email": "tester@gmail.com",
   "role": "USER"
 }
 ###
@@ -47,8 +48,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "username": "testingCleanUp",
-    "password": "testingCleanUp"
+    "username": "user2",
+    "password": "user2"
 }
 
 ###

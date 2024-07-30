@@ -3,10 +3,10 @@ package com.pavel.dinit.project.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
 
 @Entity
 @Table(name = "urlstb")
-//@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,17 +36,11 @@ public class Url {
     @JoinColumn(name = "added_by_user_id")
     private User addedByUserId;
 
-
-
-    // All the getters and setters are added with the @Data function on top
-    // This is automatically written with Lombok.
+    @OneToMany(mappedBy = "urlId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UrlHealthHistory> healthHistories;
 
     @Override
     public String toString(){
         return "Url{" + "urlId=" + this.urlId + ", urlName=" + this.urlName + "}";
     }
-
-
-
-
 }

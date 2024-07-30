@@ -1,0 +1,33 @@
+### GET request to get all Healths History:
+
+###
+GET http://localhost:8080/health_history
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
+
+###
+
+
+
+### GET request to get the history of a single URL:
+GET http://localhost:8080/health_history/5
+Authorization: Basic {{usernameUser2}} {{passwordUser2}}
+
+###
+
+
+
+### POST request to log the current state of the url in the history:
+POST http://localhost:8080/health_history/3
+Content-Type: application/json
+Authorization: Basic {{tester}} {{testerPass}}
+
+###
+
+
+
+###
+DELETE http://localhost:8080/health_history/467
+Authorization: Basic {{usernameUser2}} {{passwordUser2}}
+
+
+###
