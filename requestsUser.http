@@ -33,11 +33,12 @@ Authorization: Basic {{tester}} {{testerPass}}
 ### POST request to add a single User:
 POST http://localhost:8080/auth/register
 Content-Type: application/json
+Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "username": "tester",
-  "password": "tester",
-  "email": "tester@gmail.com",
+  "username": "new",
+  "password": "new",
+  "email": "new@gmail.com",
   "role": "USER"
 }
 ###
@@ -48,8 +49,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "username": "user2",
-    "password": "user2"
+    "username": "user4",
+    "password": "user4"
 }
 
 ###
