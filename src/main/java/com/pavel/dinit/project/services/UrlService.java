@@ -149,7 +149,6 @@ public class UrlService {
     }
 
 
-
     private void validateUrlCreationDto(UrlCreationDto urlCreateDTO) {
         if (urlCreateDTO.getFullUrl() == null || urlCreateDTO.getFullUrl().isEmpty()) {
             throw new Conflict("There is no URL specified.");
@@ -223,7 +222,6 @@ public class UrlService {
     }
 
 
-
     // Function to check and update all the URLS healths, im not sure how to write this XD
     @Transactional
     public void checkAllUrlsHealth() {
@@ -236,6 +234,8 @@ public class UrlService {
         urls.forEach(url -> {
             // Check the health of the URL
             boolean isHealthy = checkUrlHealth1(url.getFullUrl());
+            boolean previousHealthStatus = url.getUrlHealth();
+
 
             // Update URL health status and last checked timestamp
             url.setUrlHealth(isHealthy);
@@ -253,15 +253,16 @@ public class UrlService {
             urlHealthHistoryRepo.save(history);
 
             // Alert the user about the health status change
-            alertUser(url);
+            if (previousHealthStatus != isHealthy) {
+                alertUser(url);
+            }
         });
     }
 
 
-
-    public void alertUser(Url url){
+    public void alertUser(Url url) {
         User user = url.getAddedByUserId();
-        if (user != null){
+        if (user != null) {
             alertService.sendEmail(user.getEmail(), "URL Health Status Update", "URL: " + url.getUrlName() + " health status changed to: " + url.getUrlHealth() + ".");
             logger.info("Sent email to user's email: {} for URL health status change.", user.getEmail());
 
@@ -311,7 +312,6 @@ public class UrlService {
         // Save the updated URL
         urlRepo.save(url);
     }
-
 
 
 }

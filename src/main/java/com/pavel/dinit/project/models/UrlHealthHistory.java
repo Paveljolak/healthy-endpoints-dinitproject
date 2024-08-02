@@ -21,7 +21,7 @@ public class UrlHealthHistory {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "url_id", nullable = false)
+    @JoinColumn(name = "url_Id", nullable = false)
     private Url urlId;
 
     @Column(name = "health_status")

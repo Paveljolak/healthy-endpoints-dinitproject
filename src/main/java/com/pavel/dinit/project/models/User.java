@@ -17,25 +17,25 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column()
+    @Column(name="id")
     private Long id;
 
-    @Column()
+    @Column(name="username")
     private String username;
 
-    @Column()
+    @Column(name="password")
     private String password;
 
-    @Column()
+    @Column(name="email")
     private String email;
 
-    @Column()
+    @Column(name="role")
     private String role; // ADMIN,USER - for admins.
 
-    @Column()
+    @Column(name="enabled")
     private boolean enabled;
 
-    @Column()
+    @Column(name="verification_code")
     private String verificationCode;
 
     @OneToMany(mappedBy = "addedByUserId", cascade = CascadeType.ALL, orphanRemoval = true)

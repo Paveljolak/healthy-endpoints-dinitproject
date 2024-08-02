@@ -9,15 +9,15 @@ Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 
 ### GET request to get the history of a single URL:
-GET http://localhost:8080/health_history/13
-Authorization: Basic {{usernameUser2}} {{passwordUser2}}
+GET http://localhost:8080/health_history/24
+Authorization: Basic {{usernameUser3}} {{passwordUser3}}
 
 ###
 
 
 
 ### POST request to log the current state of the url in the history:
-POST http://localhost:8080/health_history/4
+POST http://localhost:8080/health_history/24
 Content-Type: application/json
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 

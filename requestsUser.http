@@ -33,12 +33,11 @@ Authorization: Basic {{tester}} {{testerPass}}
 ### POST request to add a single User:
 POST http://localhost:8080/auth/register
 Content-Type: application/json
-Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 {
-  "username": "new",
+  "username": "ne12314w",
   "password": "new",
-  "email": "new@gmail.com",
+  "email": "pavel.jolakoski@gmail.com",
   "role": "USER"
 }
 ###

@@ -8,7 +8,7 @@ GET http://localhost:8080/urls
 ###
 
 ### GET request to get a single URL based on the unique ID:
-GET http://localhost:8080/urls/7
+GET http://localhost:8080/urls/21
 Authorization: Basic {{usernameAdmin1}} {{passwordAdmin1}}
 
 ###

@@ -14,22 +14,22 @@ import java.util.Set;
 public class Url {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column()
+    @Column(name = "url_id")
     private long urlId;
 
-    @Column()
+    @Column(name = "url_name")
     private String urlName;
 
-    @Column()
+    @Column(name = "full_url")
     private String fullUrl;
 
-    @Column()
+    @Column(name = "url_health")
     private Boolean urlHealth;
 
-    @Column()
+    @Column(name = "date_added")
     private String dateAdded;
 
-    @Column()
+    @Column(name = "last_checked")
     private String lastChecked;
 
     @ManyToOne(fetch = FetchType.LAZY)
