@@ -37,7 +37,7 @@ Content-Type: application/json
 {
   "username": "ne12314w",
   "password": "new",
-  "email": "pavel.jolakoski@gmail.com",
+  "email": "testing@gmail.com",
   "role": "USER"
 }
 ###
